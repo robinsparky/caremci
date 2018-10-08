@@ -1,0 +1,47 @@
+# Translation of Themes - Appointment Green in Spanish (Spain)
+# This file is distributed under the same license as the Themes - Appointment Green package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2016-11-15 16:20+0530\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.5.5\n"
+"Language: es\n"
+"Project-Id-Version: Themes - Appointment Green\n"
+"POT-Creation-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+
+#. Description of the plugin/theme
+msgid ""
+"A Business theme which is ideal for creating a corporate / business website. "
+"Appointment Green theme is a child theme of appointment which has several "
+"sections such as slider, services , widget area, etc etc. The green of this "
+"theme makes your site looks clean and elegant."
+msgstr ""
+"Un tema para negocios que es ideal para un sitio web corporativo o de "
+"empresa. El tema Appointment Green es un tema hijo de Appointment, con "
+"muchas secciones como slider, servicios, área de widgets, etc. El verde de "
+"este tema hace que tu sitio sea limpio y elegante."
+
+#. Theme Name of the plugin/theme
+msgid "Appointment Green"
+msgstr "Appointment Green"
+
+#: header.php:49
+msgid "Toggle navigation"
+msgstr "Cambiar navegación"
+
+#. Author URI of the plugin/theme
+msgid "http://www.webriti.com"
+msgstr "http://www.webriti.com"
+
+#. Author of the plugin/theme
+msgid "webriti"
+msgstr "webriti"
+
+#. Theme URI of the plugin/theme
+msgid "http://webriti.com/appointment-green-child-version-details-page-1/"
+msgstr "http://webriti.com/appointment-green-child-version-details-page-1/"
