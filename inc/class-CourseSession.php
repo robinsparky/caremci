@@ -19,8 +19,11 @@ class CourseSession {
 	const COURSE_SESSION_ID = 'care_course_session_courseid';
 	const COURSE_SESSION_NAME = 'care_course_session_name';
 
-	private const LB = "[";
-	private const RB = "]";
+	//Id of the select element
+	const COURSE_SELECT_ID = 'care_course_selector';
+
+	//Name of local js object
+	const JS_OBJECT = 'care_course_session';
 	
 	private $hooks;
 	private $roles;
@@ -59,7 +62,7 @@ class CourseSession {
 	public function __construct() {
 		$loc = __CLASS__ . '::' . __FUNCTION__;
 
-		$this->hooks = array();
+		$this->hooks = array('post.php', 'post-new.php');
 		$this->roles = array();
 		$this->log = new BaseLogger( true );
 	}
@@ -92,14 +95,34 @@ class CourseSession {
 		add_filter('em_event_output_placeholder', array( $this, 'sessionPlaceholders'), 1, 3 );
 
 		//Hook into the search filters
-		add_filter( 'em_events_get_default_search', array( $this, 'getDefaultSearch'), 1, 2 );
-		add_filter( 'em_calendar_get_default_search',array( $this, 'getDefaultSearch'), 1, 2 );
+		add_filter('em_events_get_default_search', array( $this, 'getDefaultSearch'), 1, 2 );
+		add_filter('em_calendar_get_default_search',array( $this, 'getDefaultSearch'), 1, 2 );
 		add_filter( 'em_events_build_sql_conditions', array( $this, 'buildSqlSearchConditions'), 1, 2 );
-		add_action( 'em_template_events_search_form_footer', array( $this, 'courseSearchForm') );
-		add_filter( 'em_accepted_searches', array( $this, 'acceptedSearches'), 1, 1 );
+		add_action('em_template_events_search_form_footer', array( $this, 'courseSearchForm') );
+		add_filter('em_accepted_searches', array( $this, 'acceptedSearches'), 1, 1 );
 
-		add_filter( 'em_content_events_args', array( $this, 'filterEventArgs'), 1, 1 );
+		add_filter('em_content_events_args', array( $this, 'filterEventArgs'), 1, 1 );
 		
+	}
+	
+	/**
+	 * Enqueue any needed JS files
+	 */
+	public function enqueue( $hook ) {
+        $loc = __CLASS__ . '::' . __FUNCTION__;
+        $this->log->error_log( "$loc --> $hook" ); 
+
+        //Make sure we are rendering the "user-edit" page
+        if( in_array( $hook, $this->hooks ) ) {
+
+            wp_register_script( 'care-course-event'
+                            , get_stylesheet_directory_uri() . '/js/care-course-event.js'
+                            , array('jquery') );
+    
+            wp_localize_script( 'care-course-event', self::JS_OBJECT, $this->get_data() );
+
+            wp_enqueue_script( 'care-course-event' );
+		}
 	}
 
 	public function filterEventArgs( $args ) {
@@ -176,8 +199,8 @@ class CourseSession {
 		if( $column_name === 'course_title' ){
 			$args = array("post_id" => $postID);
 			$ev = EM_Events::get( $args )[0];
-			$this->log->error_log("$loc --> Event post id={$ev->post_id}");
-			$this->sessionEventLoad( $ev, "$loc --> Events" );
+			$this->log->error_log("$loc -->{$ev->post_id}");
+			$this->sessionEventLoad( $ev );
 			//$this->log->error_log( $ev );
 			$val = !empty($ev->course_Title) ? $ev->course_Title : "n/a";
 			echo $val;
@@ -207,28 +230,7 @@ class CourseSession {
 		}
     	return $replace;
 	}
-	
-	/**
-	 * Enqueue any needed JS files
-	 */
-	public function enqueue( $hook ) {
-        $loc = __CLASS__ . '::' . __FUNCTION__;
-        $this->log->error_log( "$loc --> $hook" ); 
 
-        //Make sure we are rendering the "user-edit" page
-        if( in_array( $hook, $this->hooks ) ) {
-            //Enqueue WP media js
-            //wp_enqueue_media();
-
-            // wp_register_script( 'care-media-uploader'
-            //                 , get_stylesheet_directory_uri() . '/js/care-course-media-uploader.js'
-            //                 , array('jquery') );
-    
-            // wp_localize_script( 'care-media-uploader', self::JS_OBJECT, $this->get_data() );
-
-            // wp_enqueue_script( 'care-media-uploader' );
-		}
-	}
 
 	/**
 	 * Retrieve the parent course id and title if it exists
@@ -271,7 +273,7 @@ class CourseSession {
         $loc = __CLASS__ . '::' . __FUNCTION__;
 		$this->log->error_log( $loc );
 		
-		/* Associated course meta box */
+		/* Curriculum meta box */
 		add_meta_box( 'care_course_session_meta_box' //id
 					, 'Course or Workshop' //Title
 					, array( $this, 'sessionCallback' ) //Callback
@@ -303,17 +305,13 @@ class CourseSession {
 		$this->log->error_log("$loc --> actual='{$EM_Event->course_Id}'");
 
 		//Now echo the html desired
-		$sel = sprintf('<select name="%s">', self::COURSE_SESSION_ID );
-		echo $sel; //'<select name="care_course_session_field">';
-		$courses = Course::getCourseDefinitions( true );
-
-		$this->log->error_log( $courses, "$loc-->Courses");
+		$sel = sprintf('<select id="%s" name="%s">', self::COURSE_SELECT_ID, self::COURSE_SESSION_ID );
+		echo $sel;
+		$courses = Course::getCourseDefinitions();
 		$sel = '';
 		$options = array();
 		foreach( $courses as $course ) {
-			//$disp = esc_attr( $course['name'] );
-			$approval = 'yes' === $course['needsapproval'] ? __("; Use password protection", CARE_TEXTDOMAIN ) : "";
-			$disp = sprintf("%s %s$%d%s%s", $course['name'], self::LB, $course['price'], $approval, self::RB );
+			$disp = esc_attr( $course['name'] );
 			$value = esc_attr( $course['id'] );
 			if($EM_Event->course_Id === $value) {
 				$sel = 'selected';
@@ -331,7 +329,6 @@ class CourseSession {
 		array_unshift( $options, $instr );
 		echo implode( $options );
 		echo '</select>';
-
 	}
 	
 	/** 
@@ -405,6 +402,17 @@ class CourseSession {
 			}
 		}
 		return $result;
+	}
+	
+	private function get_data() {
+		$loc = __CLASS__ . '::' . __FUNCTION__;
+        $this->log->error_log( $loc );
+
+        $mess = "Greetings from Course Session!";
+        // if( isset( $_SESSION['coursereportmessage'] ) ) $mess = $_SESSION['coursereportmessage'] ;
+        return array( 'selectId' => self::COURSE_SELECT_ID
+                    , 'message' => $mess
+                   );
 	}
 
 } //end class
