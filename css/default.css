@@ -141,7 +141,8 @@ table.front_logos tfoot td {
 }
 
 .welcome.video {
-	float: left;
+	float: left !important;
+	padding: 2px 2px 2px 2px;
 }
 
 /* Contact Forms */
