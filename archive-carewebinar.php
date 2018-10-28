@@ -31,15 +31,33 @@ get_header();  ?>
 			<!-- Blog Area -->
 			<div class="<?php appointment_post_layout_class(); ?>" >
 			<?php
-                $args = array( 'posts_per_page' => '10', 'post_type' => 'carewebinar' ); 
-                $loop = new WP_Query( $args ); 
-                while ( $loop->have_posts() ) : 
-                    $loop->the_post();
+                while ( have_posts() ) : 
+                    the_post();
                     global $more;
                     $more = 0; 
                 ?>
+                <hr style="clear:left;">
+				<?php 
+					$videoUrl = get_post_meta( get_the_ID(), Webinar::VIDEO_META_KEY, true );
+					$hasVideo = 'No';
+					if( @$videoUrl ) $hasVideo = 'Yes';
+					if( $hasVideo === 'Yes') {
+				?>
 				<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-                <span> <?php echo the_excerpt() ?> </span>
+					<?php }
+					else { ?>
+				<h3><?php the_title(); }?></h3>
+                <small>		
+					<div>		
+					<?php care_mci_get_term_links( $post->ID, 'carewebinartax' ); 
+					?>
+					</div>
+					<details class="webinar-meta">
+						<summary>Data</summary>
+						<p>Video Available: <?php echo $hasVideo ?></p>
+					</details>
+                </small>
+                <span> <?php echo the_content() ?> </span>
 
 				<?php endwhile;
 				// Previous/next page navigation.

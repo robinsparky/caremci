@@ -12,6 +12,7 @@ require get_stylesheet_directory() . '/inc/class-CourseRegisterByEvent.php';
 //ReportCourseProgress::register();
 WatchWebinarProgress::register();
 //RecordUserCourseProgress::register();
+RecordUserWebinarProgress::register();
 //CareMediaSelector::register();
 
 /**

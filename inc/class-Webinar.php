@@ -12,15 +12,72 @@
 class Webinar extends BaseCustomMediaPostType {
 	
 	const CUSTOM_POST_TYPE = 'carewebinar';
+	const CUSTOM_POST_TYPE_TAX = 'carewebinartax';
+	const CUSTOM_POST_TYPE_TAG = 'webinartag';
+
 	const VIDEO_META_KEY = '_care_webinar_video_key';
 	const CURRICULUM_META_KEY = '_care_webinar_curriculum_key';
 	const JS_OBJECT = 'care_webinar_media_obj';
+	
+	static private $AllWebinars = array();
 
     //Only emit on these page
 	private $hooks = array('post.php', 'post-new.php');
 	private $curriculum;
 
 	private $log;
+		/**
+	 * Retrieve All PASS Webinars and meta data from db
+	 * @param $force Boolean to force fresh retrieval from database
+	 */
+	static public function getWebinarDefinitions( $force = false ) {
+		$loc = __CLASS__ . '::' . __FUNCTION__;
+
+		$map = array( self::VIDEO_META_KEY => 'video'
+				);
+
+		global $wpdb;
+		if( $force || count( self::$AllWebinars ) < 1 ) {
+			$sql = "SELECT p.ID as id, p.post_title as name, pm.meta_key as 'key', pm.meta_value as val
+					FROM {$wpdb->prefix}postmeta pm
+					inner join {$wpdb->prefix}posts p on p.ID = pm.post_id
+					where p.post_type = '%s' 
+					order by p.post_title;";
+			$query = $wpdb->prepare( $sql, self::CUSTOM_POST_TYPE );
+			$result = $wpdb->get_results( $query, ARRAY_A );
+
+			$retval = array();
+			$ids = array();
+			foreach( $result as $row ) {
+				// error_log("$loc-->row:");
+				// error_log( print_r($row, true ) );
+				if( in_array( $row['id'], $ids ) ) {
+					foreach( $retval as &$c ) {
+						if( $row['id'] ===  $c['id'] ) {
+							if( array_key_exists($row['key'], $map ) ) {
+								$c[$map[$row['key']]] = $row['val'];
+							}
+						}
+					}
+				}
+				else {
+					array_push( $ids, $row['id'] );
+					$webinar = array();
+					$webinar['id'] = $row['id'];
+					$webinar['name'] = $row['name'];
+					if( array_key_exists($row['key'], $map ) ){
+						$webinar[$map[$row['key']]] = $row['val'];
+					}
+					array_push( $retval, $webinar );
+				}
+				// error_log("$loc-->retval:");
+				// error_log( print_r( $retval, true ) );
+			}
+			self::$AllWebinars = $retval;
+		}
+
+		return self::$AllWebinars;
+	}
 
 	public function __construct() {
 		$loc = __CLASS__ . '::' . __FUNCTION__;
@@ -35,6 +92,8 @@ class Webinar extends BaseCustomMediaPostType {
 		$this->log->error_log( $loc );
 
 		add_action( 'init', array( $this, 'customPostType') ); 
+		add_action( 'init', array( $this, 'customTaxonomy' ) );
+
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue') );
 			
 		add_filter( 'manage_' . self::CUSTOM_POST_TYPE . '_posts_columns', array( $this, 'addColumns' ), 5 );
@@ -42,7 +101,6 @@ class Webinar extends BaseCustomMediaPostType {
 		
 		//Required actions for meta box
 		add_action( 'add_meta_boxes', array( $this, 'metaBoxes' ), 5 );
-		add_action( 'save_post', array( $this, 'curriculumSave' ), 5 ) ;
 		add_action( 'save_post', array( $this, 'videoSave' ), 5 );
 
 	}
@@ -97,6 +155,45 @@ class Webinar extends BaseCustomMediaPostType {
 					, 'public' => true );
 		register_post_type( self::CUSTOM_POST_TYPE, $args );
 	}
+	
+	public function customTaxonomy() {
+        $loc = __CLASS__ . '::' . __FUNCTION__;
+		$this->log->error_log( $loc );
+		
+			//hierarchical
+		$labels = array( 'name' => 'Webinar Categories'
+						, 'singular_name' => 'Webinar Category'
+						, 'search_items' => 'Search Webinar Category'
+						, 'all_items' => 'All Webinar Categories'
+						, 'parent_item' => 'ParentWebinar Category'
+						, 'parent_item_colon' => 'Parent Webinar Category:'
+						, 'edit_item' => 'Edit Webinar Category'
+						, 'update_item' => 'Update Webinar Category'
+						, 'add_new_item' => 'Add New Webinar Category'
+						, 'new_item_name' => 'New Webinar Category'
+						, 'menu_name' => 'Webinar Categories'
+						);
+
+		$args = array( 'hierarchical' => true
+					 , 'labels' => $labels
+					 , 'show_ui' => true
+					 , 'show_admin_column' => true
+					 , 'query_var' => true
+					 , 'rewrite' => array( 'slug' => self::CUSTOM_POST_TYPE_TAX )
+					);
+
+		register_taxonomy( self::CUSTOM_POST_TYPE_TAX
+						 , array( self::CUSTOM_POST_TYPE )
+						 , $args );
+
+		//NOT hierarchical
+		register_taxonomy( self::CUSTOM_POST_TYPE_TAG
+						 , self::CUSTOM_POST_TYPE
+						 , array( 'label' => 'Webinar Tags'
+								, 'rewrite' => array( 'slug' => self::CUSTOM_POST_TYPE_TAG )
+								, 'hierarchical' => false
+						));
+	}
 
 	// Add Webinar columns
 	public function addColumns( $columns ) {
@@ -107,7 +204,7 @@ class Webinar extends BaseCustomMediaPostType {
 		$newColumns = array();
 		$newColumns['cb'] = $columns['cb'];
 		$newColumns['title'] = __('Title', CARE_TEXTDOMAIN );
-		$newColumns['webinar_curriculum'] = __( 'Curriculum', CARE_TEXTDOMAIN );
+		$newColumns['taxonomy-carewebinartax'] = __('Category', CARE_TEXTDOMAIN );
 		$newColumns['webinar_video'] = __( 'Video', CARE_TEXTDOMAIN  );
 		$newColumns['date'] = __('Date', CARE_TEXTDOMAIN );
 		return $newColumns;
@@ -118,11 +215,7 @@ class Webinar extends BaseCustomMediaPostType {
 		$loc = __CLASS__ . '::' . __FUNCTION__;
 		$this->log->error_log( $loc );
 
-		if( $column_name === 'webinar_curriculum' ){
-			$val = get_post_meta( $postID, self::CURRICULUM_META_KEY, TRUE );
-			echo $this->curriculum[$val];
-		}
-		elseif( $column_name === 'webinar_video' ){
+		if( $column_name === 'webinar_video' ){
 			$url = get_post_meta( $postID, self::VIDEO_META_KEY, TRUE );
 			
 			if( @$url  ) {
@@ -140,16 +233,6 @@ class Webinar extends BaseCustomMediaPostType {
 	================================================
 	*/
 	public function metaBoxes() {
-
-		/* Curriculum meta box */
-		add_meta_box( 'care_webinar_curriculum_meta_box' //id
-					, 'Curriculum' //Title
-					, array( $this, 'curriculumCallback' ) //Callback
-					, self::CUSTOM_POST_TYPE //mixed: screen et cpt name, or ???
-					, 'side' //context: normal, side, 
-					, 'default' // priority: low, high, default
-						// array callback args
-					);
 					
 		/* Webinar Video Meta Box */
 		add_meta_box( $this->mediaMetaBoxId //id
@@ -161,64 +244,6 @@ class Webinar extends BaseCustomMediaPostType {
 						// array callback args
 					);
 
-	}
-	
-	public function curriculumCallback( $post ) {
-        $loc = __CLASS__ . '::' . __FUNCTION__;
-		$this->log->error_log( $loc );
-
-		wp_nonce_field( 'curriculumSave' //action
-					  , 'care_webinar_curriculum_nonce');
-
-		$actual = get_post_meta( $post->ID, self::CURRICULUM_META_KEY, true );
-		$this->log->error_log("$loc --> current value='$actual'");
-
-		//Now echo the html desired
-		$this->log->error_log( $this->curriculum, "Curriculum options:" );
-		echo'<select name="care_webinar_curriculum_field">';
-		foreach( $this->curriculum as $key => $val ) {
-			$disp = esc_attr($val);
-			$value = esc_attr($key);
-			$sel = '';
-			if($actual === $key) $sel = 'selected';
-			echo "<option value='$value' $sel>$disp</option>";
-		}
-		echo '</select>';
-	}
-
-	public function curriculumSave( $post_id ) {
-        $loc = __CLASS__ . '::' . __FUNCTION__;
-		$this->log->error_log($loc);
-
-		if( ! isset( $_POST['care_webinar_curriculum_nonce'] ) ) {
-			$this->log->error_log("$loc --> no nonce");
-			return;
-		}
-
-		if( ! wp_verify_nonce( $_POST['care_webinar_curriculum_nonce'] , 'curriculumSave'  )) {
-			$this->log->error_log("$loc --> bad nonce");
-			return;
-		}
-
-		if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			$this->log->error_log("$loc --> doing autosave");
-			return;
-		}
-
-		if( ! current_user_can( 'edit_post', $post_id ) ) {
-			$this->log->error_log("$loc --> cannot edit post");
-			return;
-		}
-
-		if( ! isset( $_POST['care_webinar_curriculum_field'] ) ) {
-			$this->log->error_log("$loc --> no curriculum field");
-			return;
-		}
-
-		$my_data = sanitize_text_field( $_POST['care_webinar_curriculum_field'] );
-		$this->log->error_log("$loc --> returned value='$my_data'");
-
-		update_post_meta( $post_id, self::CURRICULUM_META_KEY, $my_data );
 	}
 	
 	public function videoCallback( $post ) {
