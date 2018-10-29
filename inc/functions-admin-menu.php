@@ -156,6 +156,10 @@ function sanitize_page_size( $input ) {
 function sanitize_roles_csv( $input ) {
     $checkstr = sanitize_text_field( $input );
     $checkarr = str_getcsv( $checkstr, "," );
+    if( strpos( $checkstr, "," ) === false ) {
+        $checkarr = array( trim( $checkstr ) );
+    }
+    
     $output = array();
     $acceptableRoles = wp_roles()->roles;
     $keys = array_keys( $acceptableRoles );
