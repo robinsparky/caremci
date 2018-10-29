@@ -23,7 +23,7 @@
 function care_admin_page() {
     //Generate MCI admin page
     add_menu_page( 'Care Admin Options' //title
-                 , 'Care' //menu name
+                 , 'Care Settings' //menu name
                  , 'manage_options' //capabilities required of user
                  , 'caremci' //slug
                  , 'care_theme_create_page' // function to create page
@@ -41,13 +41,13 @@ function care_admin_page() {
     );
     
     //Generate admin sub pages -- first one must mirror the main menu page
-    add_submenu_page( 'caremci' //parent slug
-                    , 'Care Dashboard Options' //page title
-                    , 'Dashboard' // menu title
-                    , 'manage_options' //capabilities
-                    , 'caremci_dashboard' // menu slug
-                    , 'care_theme_dashboard_page' //callback
-    );
+    // add_submenu_page( 'caremci' //parent slug
+    //                 , 'Care Dashboard Options' //page title
+    //                 , 'Dashboard' // menu title
+    //                 , 'manage_options' //capabilities
+    //                 , 'caremci_dashboard' // menu slug
+    //                 , 'care_theme_dashboard_page' //callback
+    // );
 
     add_action( 'admin_init', 'care_custom_settings' );
 }
@@ -67,8 +67,12 @@ function care_theme_dashboard_page() {
 
 function care_custom_settings() {
     register_setting( 'care-settings-group' //Options group
-                    , 'care_courses_password' //Option name used in get_option
+                    , 'care_webinar_pct_complete' //Option name used in get_option
                     //, '' //sanitize call back
+                    );
+    register_setting( 'care-settings-group' //Options group
+                    , 'care_roles_that_watch' //Option name used in get_option
+                    , 'sanitize_roles_csv' //sanitize call back
                     );
     register_setting( 'care-settings-group' //Options group
                     , 'care_courses_page_size' //Option name used in get_option
@@ -76,18 +80,26 @@ function care_custom_settings() {
                     );
 
     add_settings_section( 'care-course-options' //id
-                        , 'General Options' //title
-                        , 'care_course_options' //callback to generate html
+                        , 'Webinar Options' //title
+                        , 'care_webinar_options' //callback to generate html
                         , 'caremci' //page
                     );
     
-    add_settings_field( 'courses-password' // id
-                      , 'Course Lock Word' // title
-                      , 'courses_password' // callback
-                      , 'caremci' // page
-                      , 'care-course-options' // section
-                      //,  array of args
-                );
+    add_settings_field( 'webinar-percent-complete' // id
+                    , 'Webinar Completion Percentage' // title
+                    , 'webinarPercentComplete' // callback
+                    , 'caremci' // page
+                    , 'care-course-options' // section
+                    //,  array of args
+                    );
+                    
+    add_settings_field( 'care-roles-that-watch' // id
+                    , 'Roles Allowed to Watch Webinars' // title
+                    , 'webinarWatchRoles' // callback
+                    , 'caremci' // page
+                    , 'care-course-options' // section
+                    //,  array of args
+                    );
                 
     add_settings_section( 'care-display-options' //id
                         , 'Display Options' //title
@@ -95,7 +107,7 @@ function care_custom_settings() {
                         , 'caremci' //page
                     );
     add_settings_field( 'courses-per-page' // id
-                      , 'Courses & Workshops Per Page' // title
+                      , 'Courses & Webinars Per Page' // title
                       , 'courses_per_page' // callback
                       , 'caremci' // page
                       , 'care-display-options' // section
@@ -103,21 +115,33 @@ function care_custom_settings() {
                 );
 }
 
-function care_course_options() {
-    echo "This section is for miscellaneous settings";
+function care_webinar_options() {
+    echo "This section is for administrative settings";
 }
 function care_courses_page_size_option() {
     echo "This section is for display related settings";
 }
 
-function courses_password() {
-    $pass = esc_attr( get_option('care_courses_password') );
-    echo '<input type="text" name="care_courses_password" value="' . $pass . '" /><p>Not used</p>';
+function webinarPercentComplete() {
+    $pctCompleteFactor = esc_attr( get_option('pass_webinar_pct_complete', 85) );
+    echo '<input type="number" min="10.0" max="100.0" step="1" name="pass_webinar_pct_complete" value="' . $pctCompleteFactor . '" /><p>Max 100 and at least 10. Default is 85</p>';
+}
+
+function webinarWatchRoles() {
+    $roleNames = array_keys( wp_roles()->roles );
+    $rolesWatch = esc_attr( get_option('care_roles_that_watch','um_member') );
+    echo '<input type="text" size="60" name="care_roles_that_watch" value="' . $rolesWatch . '" />';
+    echo '<p>Available roles:</p>';
+    echo '<ul>';
+    foreach( $roleNames as $role ) {
+        echo '<li>' . $role . '</li>';
+    }
+    echo '</ul>';
 }
 
 function courses_per_page() {
     $pagesize = esc_attr( get_option('care_courses_page_size') );
-    echo '<input type="text" name="care_courses_page_size" value="' . $pagesize . '" /><p>Max 1000 and not negative</p>';
+    echo '<input type="text" size="10" name="care_courses_page_size" value="' . $pagesize . '" /><p>Max 1000 and not negative</p>';
 }
 
 function sanitize_page_size( $input ) {
@@ -127,5 +151,20 @@ function sanitize_page_size( $input ) {
         else $output = $input;
     }
     return $output;
+}
+
+function sanitize_roles_csv( $input ) {
+    $checkstr = sanitize_text_field( $input );
+    $checkarr = str_getcsv( $checkstr, "," );
+    $output = array();
+    $acceptableRoles = wp_roles()->roles;
+    $keys = array_keys( $acceptableRoles );
+    foreach( $checkarr as $roleName ) {
+        $roleName = trim( $roleName );
+        if( in_array( $roleName, $keys ) ) {
+            array_push( $output, $roleName );
+        }
+    }
+    return implode( ",", $output );
 }
 

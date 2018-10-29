@@ -8,12 +8,14 @@
 				 //NOTE: Must be a member of the site to view a webinar
 				 $ok = false;
 				 if (is_user_logged_in()) {
-					$currentUser = wp_get_current_user();
-					error_log( print_r($currentUser->roles, true ) );
-					if( in_array('um_caremember', $currentUser->roles ) ||
-						in_array('um_member', $currentUser->roles ) ||
-						current_user_can( 'manage_options' ) ) {
-						$ok = true;
+					$currentUser = wp_get_current_user();					
+					$rolesWatch = esc_attr( get_option('care_roles_that_watch') );
+					$rolesWatchArr = explode( ",", $rolesWatch );
+					foreach( $rolesWatchArr as $roleName ) {
+						if( in_array( $roleName, $currentUser->roles ) ) {
+							$ok = true;
+							break;
+						}
 					}
 				}
 				 $postid = get_the_ID();
