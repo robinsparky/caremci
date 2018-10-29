@@ -14,6 +14,8 @@ WatchWebinarProgress::register();
 //RecordUserCourseProgress::register();
 RecordUserWebinarProgress::register();
 //CareMediaSelector::register();
+ManagementReports::register();
+
 
 /**
  * Customize Event Query using Post Meta

@@ -282,15 +282,15 @@ EOT;
     /**
      * Save the posted array of webinar statuses (histories) in the db
      * @param $userId The id of the user whose webinars are being recorded
-     * @param $statusreports Is an array of 6 values: id, webinar name, startdate, enddate, watchedPct, location
+     * @param $statusreports Is an array of 6 values: id, webinar name, startdate, enddate, status, watchedPct, location
      */
     private function storeWebinarProgress( $userId, $statusreports ) {
         $loc = __CLASS__ . '::' . __FUNCTION__;
         $this->log->error_log( $loc );
         //Below is an example of the element giving the "statusreports" array
         //<input name="webinarreports[]" 
-            //value="7211|Information Session|2018-10-28|2018-10-28|In Progress|0|unknown" 
-            //type="hidden">
+        //      value="7211|Information Session|2018-10-28|2018-10-28|In Progress|0|unknown" 
+        //      type="hidden">
         $webinars = array();
         $tracker = array();
         $format = 'Y-m-d';
