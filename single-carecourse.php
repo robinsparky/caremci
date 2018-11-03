@@ -11,8 +11,17 @@ get_template_part('index','banner'); ?>
 			<?php
                 if( have_posts() )
                 {
-                while( have_posts() ) { the_post();
-		            get_template_part('content','carecourse'); ?>
+				while( have_posts() ) { the_post();
+					$postid = get_the_ID();
+					$videoUrl = get_post_meta( $postid, Course::VIDEO_META_KEY, true ); 
+					if( !empty( $videoUrl ) ) {
+						get_template_part('content','carecoursevideo'); 
+					}
+					else {
+						get_template_part('content','carecourse'); 
+					}
+					?>
+
 				<!--/Blog Author-->
 				<?php } comments_template('',true);  } ?>	
 		</div>

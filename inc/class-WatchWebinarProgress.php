@@ -61,7 +61,8 @@ class WatchWebinarProgress
         $templ = isset( $templ ) ? $templ : 'No template is set yet.';
         $this->log->error_log(sprintf( "%s-->current template=%s", $loc, $templ ));
 
-        if( 'single-carewebinar.php' === $templ ) {
+        if( 'single-carewebinar.php' === $templ 
+         || 'single-carecourse.php'  === $templ ) {
             wp_register_script( 'watch_webinar'
                             , get_stylesheet_directory_uri() . '/js/care-watch-webinar.js'
                             , array('jquery') );
