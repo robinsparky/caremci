@@ -13,6 +13,7 @@ require get_stylesheet_directory() . '/inc/functions-admin-menu.php';
 
 //Support functions
 require get_stylesheet_directory() . '/inc/functions-support.php';
+require get_stylesheet_directory() . '/inc/PayPalAPI.php';
 
 /*
 * MCI styles
@@ -29,7 +30,7 @@ function care_mci_theme_css() {
 	//javascript
 	wp_enqueue_script('care-common-js', get_stylesheet_directory_uri()."/js/care-message-window.js");
 }
-add_action( 'wp_enqueue_scripts', 'care_mci_theme_css',999);
+add_action( 'wp_enqueue_scripts', 'care_mci_theme_css', 999 );
 
 function change_default_css( ) {
     wp_dequeue_style( 'appointment-default');
@@ -98,6 +99,7 @@ function care_mci_get_term_links( $postID, $termname ) {
 		}
 	}
 }
+
 
 //Just for dev
 add_filter( 'auth_cookie_expiration', 'keep_me_logged_in_for_1_year' );

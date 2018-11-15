@@ -206,9 +206,20 @@ class WatchWebinarProgress
     {
         $loc = __CLASS__ . '::' . __FUNCTION__;
         $this->log->error_log( $loc );
+        
+        if( !is_user_logged_in() ){
+            return "User is not logged in!";
+        }
+
+        //global $ultimatemember;
 
         $currentuser = wp_get_current_user();
+        $user_id = (int) $currentuser->ID;
         $ok = false;
+
+        if( um_is_core_page('user')  && um_get_requested_user() ) {
+            if( !um_is_user_himself() ) return '';
+        }
 
         foreach( $this->roles as $role ) {
             if( in_array( $role, $currentuser->roles ) ) {
@@ -224,11 +235,7 @@ class WatchWebinarProgress
 		$myshorts = shortcode_atts( array("user_id" => 0), $atts, 'user_status' );
         extract( $myshorts );
         
-        if( !is_user_logged_in() ){
-            return "User is not logged in!";
-        }
 
-        $user_id = (int) $currentuser->ID;
         $this->log->error_log( sprintf("%s: User id=%d and email=%s",$loc, $user_id, $currentuser->user_email ));
     
         $overall_title  = __('Webinar Progress Report', CARE_TEXTDOMAIN );
