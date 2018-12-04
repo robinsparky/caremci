@@ -27,7 +27,7 @@ class Course extends BaseCustomMediaPostType {
 	
     //Only emit on this page
 	private $hooks = array('post.php', 'post-new.php');
-	private $curriculum;
+	//private $curriculum;
 	private $needsApproval;
 
 	private $log;
@@ -44,7 +44,6 @@ class Course extends BaseCustomMediaPostType {
 					, self::NEEDS_APPROVAL_META_KEY => 'needsapproval'
 					, self::DURATION_META_KEY => 'duration'
 					, self::VIDEO_META_KEY => 'video'
-					, self::CURRICULUM_META_KEY => 'curriculum'
 				);
 
 		global $wpdb;
@@ -138,7 +137,7 @@ class Course extends BaseCustomMediaPostType {
 		$this->log = new BaseLogger( true );
 
 		$this->mediaMetaBoxId = 'care_course_video_meta_box';
-		$this->curriculum = array( 'recommended' =>'Recommended', 'essential' => 'Essential' );
+		//$this->curriculum = array( 'recommended' =>'Recommended', 'essential' => 'Essential' );
 		$this->needsApproval = array('no' => 'No', 'yes' => 'Yes');
 	}
 
@@ -157,7 +156,7 @@ class Course extends BaseCustomMediaPostType {
 		
 		//Required actions for meta boxes
 		add_action( 'add_meta_boxes', array( $this, 'metaBoxes' ) );
-		add_action( 'save_post', array( $this,'curriculumSave') ) ;
+		//add_action( 'save_post', array( $this,'curriculumSave') ) ;
 		add_action( 'save_post', array( $this, 'videoSave') );
 		add_action( 'save_post', array( $this, 'priceSave') );
 		add_action( 'save_post', array( $this, 'durationSave') );
@@ -171,8 +170,8 @@ class Course extends BaseCustomMediaPostType {
 
         //Make sure we are rendering the "user-edit" page
         if( in_array( $hook, $this->hooks ) ) {
-            //Enqueue WP media js
-            wp_enqueue_media();
+            
+            wp_enqueue_media();//Enqueue WP media js
 
             wp_register_script( 'care-media-uploader'
                             , get_stylesheet_directory_uri() . '/js/care-course-media-uploader.js'
@@ -230,7 +229,7 @@ class Course extends BaseCustomMediaPostType {
 		$newColumns['course_price'] = __('Price', CARE_TEXTDOMAIN );
 		$newColumns['course_approval'] = __('Needs Approval', CARE_TEXTDOMAIN );
 		$newColumns['course_duration'] = __('Duration', CARE_TEXTDOMAIN );
-		$newColumns['course_curriculum'] = __( 'Curriculum', CARE_TEXTDOMAIN );
+		//$newColumns['course_curriculum'] = __( 'Curriculum', CARE_TEXTDOMAIN );
 		$newColumns['course_video'] = __( 'Video', CARE_TEXTDOMAIN  );
 		$newColumns['date'] = __('Date', CARE_TEXTDOMAIN );
 		return $newColumns;
@@ -265,11 +264,11 @@ class Course extends BaseCustomMediaPostType {
         $loc = __CLASS__ . '::' . __FUNCTION__;
 		$this->log->error_log( "$loc --> $column_name, $postID" );
 
-		if( $column_name === 'course_curriculum' ){
-			$val = get_post_meta( $postID, self::CURRICULUM_META_KEY, TRUE );
-			echo $this->curriculum[$val];
-		}
-		elseif( $column_name === 'course_video' ) {
+		// if( $column_name === 'course_curriculum' ){
+		// 	$val = get_post_meta( $postID, self::CURRICULUM_META_KEY, TRUE );
+		// 	echo $this->curriculum[$val];
+		// }
+		if( $column_name === 'course_video' ) {
 			$url = get_post_meta( $postID, self::VIDEO_META_KEY, TRUE );
 			
 			if( @$url  ) {
@@ -353,14 +352,14 @@ class Course extends BaseCustomMediaPostType {
 		$this->log->error_log( $loc );
 		
 		/* Curriculum meta box */
-		add_meta_box( 'care_course_curriculum_meta_box' //id
-					, 'Curriculum' //Title
-					, array( $this, 'curriculumCallback' ) //Callback
-					, self::CUSTOM_POST_TYPE //mixed: screen et cpt name, or ???
-					, 'normal' //context: normal, side, 
-					, 'high' // priority: low, high, default
-						// array callback args
-					);
+		// add_meta_box( 'care_course_curriculum_meta_box' //id
+		// 			, 'Curriculum' //Title
+		// 			, array( $this, 'curriculumCallback' ) //Callback
+		// 			, self::CUSTOM_POST_TYPE //mixed: screen et cpt name, or ???
+		// 			, 'normal' //context: normal, side, 
+		// 			, 'high' // priority: low, high, default
+		// 				// array callback args
+		// 			);
 					
 		/* Video Meta Box */
 		add_meta_box( $this->mediaMetaBoxId //id
@@ -368,7 +367,7 @@ class Course extends BaseCustomMediaPostType {
 					, array( $this, 'videoCallback' ) //Callback
 					, self::CUSTOM_POST_TYPE //mixed: screen et cpt name, or ???
 					, 'normal' //context: normal, side, 
-					, 'high' // priority: low, high, default
+					, 'default' // priority: low, high, default
 						// array callback args
 					);
 		
@@ -401,62 +400,62 @@ class Course extends BaseCustomMediaPostType {
 
 	}
 	
-	public function curriculumCallback( $post ) {
-        $loc = __CLASS__ . '::' . __FUNCTION__;
-		$this->log->error_log($loc);
+	// public function curriculumCallback( $post ) {
+    //     $loc = __CLASS__ . '::' . __FUNCTION__;
+	// 	$this->log->error_log($loc);
 
-		wp_nonce_field( 'curriculumSave' //action
-					  , 'care_course_curriculum_nonce');
+	// 	wp_nonce_field( 'curriculumSave' //action
+	// 				  , 'care_course_curriculum_nonce');
 
-		$actual = get_post_meta( $post->ID, self::CURRICULUM_META_KEY, true );
-		$this->log->error_log("$loc --> actual='$actual'");
+	// 	$actual = get_post_meta( $post->ID, self::CURRICULUM_META_KEY, true );
+	// 	$this->log->error_log("$loc --> actual='$actual'");
 
-		//Now echo the html desired
-		echo'<select name="care_course_curriculum_field">';
-		foreach( $this->curriculum as $key => $val ) {
-			$disp = esc_attr($val);
-			$value = esc_attr($key);
-			$sel = '';
-			if($actual === $key) $sel = 'selected';
-			echo "<option value='$value' $sel>$disp</option>";
-		}
-		echo '</select>';
-	}
+	// 	//Now echo the html desired
+	// 	echo'<select name="care_course_curriculum_field">';
+	// 	foreach( $this->curriculum as $key => $val ) {
+	// 		$disp = esc_attr($val);
+	// 		$value = esc_attr($key);
+	// 		$sel = '';
+	// 		if($actual === $key) $sel = 'selected';
+	// 		echo "<option value='$value' $sel>$disp</option>";
+	// 	}
+	// 	echo '</select>';
+	// }
 
-	public function curriculumSave( $post_id ) {
-        $loc = __CLASS__ . '::' . __FUNCTION__;
-		$this->log->error_log($loc);
+	// public function curriculumSave( $post_id ) {
+    //     $loc = __CLASS__ . '::' . __FUNCTION__;
+	// 	$this->log->error_log($loc);
 
-		if( ! isset( $_POST['care_course_curriculum_nonce'] ) ) {
-			$this->log->error_log("$loc --> no nonce");
-			return;
-		}
+	// 	if( ! isset( $_POST['care_course_curriculum_nonce'] ) ) {
+	// 		$this->log->error_log("$loc --> no nonce");
+	// 		return;
+	// 	}
 
-		if( ! wp_verify_nonce( $_POST['care_course_curriculum_nonce'] , 'curriculumSave'  )) {
-			$this->log->error_log("$loc --> bad nonce");
-			return;
-		}
+	// 	if( ! wp_verify_nonce( $_POST['care_course_curriculum_nonce'] , 'curriculumSave'  )) {
+	// 		$this->log->error_log("$loc --> bad nonce");
+	// 		return;
+	// 	}
 
-		if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			$this->log->error_log("$loc --> doing autosave");
-			return;
-		}
+	// 	if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+	// 		$this->log->error_log("$loc --> doing autosave");
+	// 		return;
+	// 	}
 
-		if( ! current_user_can( 'edit_post', $post_id ) ) {
-			$this->log->error_log("$loc --> cannot edit post");
-			return;
-		}
+	// 	if( ! current_user_can( 'edit_post', $post_id ) ) {
+	// 		$this->log->error_log("$loc --> cannot edit post");
+	// 		return;
+	// 	}
 
-		if( ! isset( $_POST['care_course_curriculum_field'] ) ) {
-			$this->log->error_log("$loc --> no curriculum field");
-			return;
-		}
+	// 	if( ! isset( $_POST['care_course_curriculum_field'] ) ) {
+	// 		$this->log->error_log("$loc --> no curriculum field");
+	// 		return;
+	// 	}
 
-		$my_data = sanitize_text_field( $_POST['care_course_curriculum_field'] );
-		$this->log->error_log("$loc --> my_data=$my_data");
+	// 	$my_data = sanitize_text_field( $_POST['care_course_curriculum_field'] );
+	// 	$this->log->error_log("$loc --> my_data=$my_data");
 
-		update_post_meta( $post_id, self::CURRICULUM_META_KEY, $my_data );
-	}
+	// 	update_post_meta( $post_id, self::CURRICULUM_META_KEY, $my_data );
+	// }
 	
 	public function videoCallback( $post ) {
         $loc = __CLASS__ . '::' . __FUNCTION__;
