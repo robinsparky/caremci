@@ -217,9 +217,11 @@ class WatchWebinarProgress
         $user_id = (int) $currentuser->ID;
         $ok = false;
 
-        if( um_is_core_page('user')  && um_get_requested_user() ) {
-            if( !um_is_user_himself() ) return '';
-        }
+        // if( um_is_core_page('user')  && um_get_requested_user() ) {
+        //     if( !um_is_user_himself() ) return '';
+        // }
+
+        if( !um_is_myprofile() ) return '';
 
         foreach( $this->roles as $role ) {
             if( in_array( $role, $currentuser->roles ) ) {

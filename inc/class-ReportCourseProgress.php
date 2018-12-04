@@ -182,6 +182,12 @@ class ReportCourseProgress
 
         error_log( "$loc ========================================" );
         
+        if( !is_user_logged_in() ) {
+            return "";
+        }
+        
+        if( !um_is_myprofile() ) return '';
+
         $currentuser = wp_get_current_user();
         if ( ! ( $currentuser instanceof WP_User ) ) {
             return '<h1>ET call home!</h1>';
@@ -194,7 +200,7 @@ class ReportCourseProgress
                 break;
             }
         }
-
+        
         if( current_user_can( 'manage_options' ) ) $ok = true;
  
         if(! $ok ) return '';
@@ -202,9 +208,6 @@ class ReportCourseProgress
 		$myshorts = shortcode_atts( array("user_id" => 0), $atts, 'user_status' );
         extract( $myshorts );
         
-        if( !is_user_logged_in() ){
-            return "User is not logged in!";
-        }
 
         $user_id = (int) $currentuser->ID;
         error_log( sprintf("%s: User id=%d and email=%s",$loc, $user_id, $currentuser->user_email ));
