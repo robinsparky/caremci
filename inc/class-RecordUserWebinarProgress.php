@@ -28,8 +28,6 @@ class RecordUserWebinarProgress
 
     const TABLE_CLASS = 'webinar-status';
 
-    const SESSION_MESSAGE_KEY = 'webinarreportmessage';
-
     private $ajax_nonce = null;
     private $errobj = null;
     private $errcode = 0;
@@ -47,13 +45,6 @@ class RecordUserWebinarProgress
         $handler = new self();
         add_action('admin_enqueue_scripts', array( $handler, 'registerAdminScript' ) );
         $handler->registerHandlers();
-        
-        //TODO: Remove session after code is debugged
-        if(session_id() == '') {
-            session_start();
-        }
-        // error_log("SESSION+++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        // error_log( $_SESSION );
     }
 
 	/*************** Instance Methods ****************/

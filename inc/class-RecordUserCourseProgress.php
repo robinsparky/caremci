@@ -46,9 +46,6 @@ class RecordUserCourseProgress
         add_action('admin_enqueue_scripts', array( $handler, 'registerAdminScript' ) );
         
         $handler->registerHandlers();
-        session_start();
-        // error_log("SESSION+++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        // error_log( $_SESSION );
     }
 
 	/*************** Instance Methods ****************/
