@@ -160,11 +160,47 @@ table.picker__table {
 	background-color: inherit; /* #3ba1da; */
 }
 
-div.fluency-scores input[type="number"]
-{
+
+/*
+ * Join Us Form: language fluency styles
+*/
+.fluency-scores {
+	margin: 0 auto;
+	width: 100%;
+	width:auto;
+	margin: auto auto auto 30px;
+}
+
+.fluency-scores legend {
+	font-size: inherit;
+}
+
+.fluency-row {
+	width: 100%;
+	clear: both;
+}
+
+.fluency-row div {
+	width: 25%;
 	float: left;
 }
 
+.fluency-row label {
+	display: inline-block;
+	width: 100%;
+	text-align:right;
+	font-weight: inherit;
+}
+
+.fluency-row input {
+	width: 100%;
+}
+
+
+
+/*
+  Webinar CSS
+*/
 .webinar-progress {
 	width: 100%;
 }
