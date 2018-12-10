@@ -8,7 +8,7 @@
         let video = document.querySelector("video");
         if( !video ) return;
 
-        var longtimeout = 60000;
+        var longtimeout = 120000;
         var shorttimeout = 15000;
         window.sentWebinarWatched = false;
         
@@ -36,8 +36,9 @@
                             , 'security': care_watch_webinar_obj.security
                             , 'user_id' : care_watch_webinar_obj.user_id
                             , 'webinar': webinar };
-            //console.log( reqData );
-            console.log("************************Webinar:");
+            console.log( "reqData" );
+            console.log( reqData );
+            console.log("Webinar:");
             console.log( webinar );
 
                 // Send Ajax request with data 
@@ -155,8 +156,15 @@
                                                     seekBar.val(prog);
                                                 }	
                                             });
-        let volume = $("#volume").on('change', function(e) {
-                        video.volume = e.currentTarget.value / 100;
+                                            
+
+        $('#volume-bar').on('input', function () {
+            $(this).trigger('change');
+        });
+
+        let volume = $("#volume-bar").on('change', function(e) {
+                        console.log("Volume value=%d", $(this).val());
+                        video.volume = $("#volume-bar").val();
                     });
 
         // $("#makebig").on('click', function(e) { 
