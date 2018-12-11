@@ -44,7 +44,7 @@
 				<ul class="webinar-controls">
 					<li><label for="progress">Progress</label><progress class="webinar-progress" id="progress" value="0"></progress></li>
 					<li><label for="seek-bar">Seek</label><input type="range" id="seek-bar" value="0"></li>
-					<li><label for="volume-bar">Volume</label><input type="range" id="volume-bar"  max="1" step="0.1" value="1"></li>
+					<li><label for="volume-bar">Volume</label><input type="range" id="volume-bar" min="0.0"  max="1.0" step="0.1"></li>
 				</ul>
 
 				<?php
