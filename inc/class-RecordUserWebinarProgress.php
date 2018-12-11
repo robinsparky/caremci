@@ -51,8 +51,9 @@ class RecordUserWebinarProgress
 	public function __construct( ) {
         $this->errobj = new WP_Error();
         //Only emit on this page
-        $this->hooks = array( 'profile.php', 'user-edit.php' );
-        $this->roles = array( 'um_member', 'um_caremember' );
+        $this->hooks = array( 'profile.php', 'user-edit.php' );					
+        $rolesWatch = esc_attr( get_option('care_roles_that_watch') );
+        $this->roles = explode( ",", $rolesWatch );
         $this->statuses = array( self::PENDING, self::COMPLETED );
 
         $this->log = new BaseLogger( true );
@@ -61,7 +62,6 @@ class RecordUserWebinarProgress
     public function registerScript( $hook ) {
         $loc = __CLASS__ . '::' . __FUNCTION__;
         $this->log->error_log( "$loc" ); 
-
     }
     
     public function registerAdminScript( $hook ) {
@@ -258,7 +258,7 @@ EOT;
             $webinarreports = array();
         }
 
-        if( is_string( $webinarreports ) ) {
+        if( is_string( $webinarrepoSErts ) ) {
             $s = $webinarreports;
             $webinarreports = array();
             array_push( $webinarreports, $s );
@@ -266,7 +266,7 @@ EOT;
 
         $this->log->error_log("Length of webinar reports=" . count( $webinarreports ) );
         $this->log->error_log( $webinarreports );
-        $_SESSION[self::SESSION_MESSAGE_KEY] = $this->storeWebinarProgress( $userId, $webinarreports );
+        $this->storeWebinarProgress( $userId, $webinarreports );
 
         return;
     }
@@ -363,8 +363,7 @@ EOT;
         $loc = __CLASS__ . '::' . __FUNCTION__;
         $this->log->error_log( $loc );
 
-        $mess = "Greetings!";
-        if( isset( $_SESSION[self::SESSION_MESSAGE_KEY] ) ) $mess = $_SESSION[self::SESSION_MESSAGE_KEY] ;
+        $mess = "";
         return array( 'tableclass' => self::TABLE_CLASS
                     , 'message' => $mess
                     , 'statusvalues' => $this->statuses

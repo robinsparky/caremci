@@ -429,7 +429,6 @@ class CourseSession {
         $this->log->error_log( $loc );
 
         $mess = "Greetings from Course Session!";
-        // if( isset( $_SESSION['coursereportmessage'] ) ) $mess = $_SESSION['coursereportmessage'] ;
         return array( 'selectId' => self::COURSE_SELECT_ID
                     , 'message' => $mess
                    );

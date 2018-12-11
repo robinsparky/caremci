@@ -26,6 +26,7 @@ class ManagementReports
     private $statuses;
     private $roles;
     private $log;
+
     /**
      * Register the AJAX handler class with all the appropriate WordPress hooks.
      */
@@ -42,8 +43,9 @@ class ManagementReports
 	public function __construct( ) {
         $this->errobj = new WP_Error();
         //Only emit on this page
-        $this->hooks = array( 'management-reports' );
-        $this->roles = array( 'um_admin', 'administrator' );
+        $this->hooks = array( 'management-reports' );		
+        $rolesWatch = esc_attr( get_option('care_roles_that_watch') );
+        $this->roles = explode( ",", $rolesWatch );
 
         $this->log = new BaseLogger( true );
     }
@@ -238,7 +240,7 @@ class ManagementReports
         $loc = __CLASS__ . '::' . __FUNCTION__;
         $this->log->error_log( "$loc($id, $metaKey, $startDate, $endDate)" );
 
-        $result = $this->queryUsereMeta( $metaKey );
+        $result = $this->queryUserMeta( $metaKey );
 
         $start = DateTime::createFromFormat('Y-m-d', $startDate );
         $end   = DateTime::createFromFormat('Y-m-d', $endDate );
@@ -287,7 +289,7 @@ class ManagementReports
         $loc = __CLASS__ . '::' . __FUNCTION__;
         $this->log->error_log( "$loc($id, $metaKey, $startDate, $endDate)" );
 
-        $result = $this->queryUsereMeta( $metaKey );
+        $result = $this->queryUserMeta( $metaKey );
 
         $start = DateTime::createFromFormat('Y-m-d', $startDate );
         $end   = DateTime::createFromFormat('Y-m-d', $endDate );
@@ -338,7 +340,7 @@ class ManagementReports
      * @param $metaKey The meta_key identifying the desired meta data from the WP user_meta table
      * @return The query results
      */
-    private function queryUsereMeta( $metaKey ) {
+    private function queryUserMeta( $metaKey ) {
         $loc = __CLASS__ . '::' . __FUNCTION__;
 
         global $wpdb;

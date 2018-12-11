@@ -47,8 +47,9 @@ class WatchWebinarProgress
 
 	/*************** Instance Methods ****************/
 	public function __construct( ) {
-	    $this->errobj = new WP_Error();
-        $this->roles = array('um_caremember', 'um_member');
+	    $this->errobj = new WP_Error();		
+        $rolesWatch = esc_attr( get_option('care_roles_that_watch') );
+        $this->roles = explode( ",", $rolesWatch );
         $this->log = new BaseLogger( true );
     }
 
@@ -207,14 +208,22 @@ class WatchWebinarProgress
         $loc = __CLASS__ . '::' . __FUNCTION__;
         $this->log->error_log( $loc );
         
-        if( !is_user_logged_in() ){
+        if( !is_user_logged_in() ) {
             return "User is not logged in!";
         }
 
-        //global $ultimatemember;
-
         $currentuser = wp_get_current_user();
+        
+        if ( ! $currentuser->exists() ) {
+            return 'No such user';
+        }
+
         $user_id = (int) $currentuser->ID;
+        
+        if( 0 == $user_id ) {
+            return "User 0 is not logged in!";
+        }
+
         $ok = false;
 
         // if( um_is_core_page('user')  && um_get_requested_user() ) {
@@ -234,9 +243,9 @@ class WatchWebinarProgress
  
         if(! $ok ) return '';
 
-		$myshorts = shortcode_atts( array("user_id" => 0), $atts, 'user_status' );
-        extract( $myshorts );
-        
+        //The following was setting user_id to 0
+		// $myshorts = shortcode_atts( array("user_id" => 0), $atts, 'user_status' );
+        // extract( $myshorts );        
 
         $this->log->error_log( sprintf("%s: User id=%d and email=%s",$loc, $user_id, $currentuser->user_email ));
     

@@ -50,8 +50,9 @@ class RecordUserCourseProgress
 
 	/*************** Instance Methods ****************/
 	public function __construct( ) {
-        $this->errobj = new WP_Error();
-        $this->roles = array('um_caremember');
+        $this->errobj = new WP_Error();			
+        $rolesWatch = esc_attr( get_option('care_roles_that_watch') );
+        $this->roles = explode( ",", $rolesWatch );
         $this->log = new BaseLogger( false );
     }
 
@@ -323,7 +324,6 @@ EOT;
         $this->log->error_log( $loc );
 
         $mess = "Greetings!";
-        if( isset( $_SESSION['coursereportmessage'] ) ) $mess = $_SESSION['coursereportmessage'] ;
         return array( 'tableclass' => self::TABLE_CLASS
                     , 'message' => $mess
                    );
