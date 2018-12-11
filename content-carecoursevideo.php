@@ -5,7 +5,7 @@
 			<?php // Check Image size for fullwidth template
 				 appointment_post_thumbnail('','img-responsive');
 				 appointment_post_meta_content();
-				 //NOTE: Must be a member of the site to view a webinar
+				 //NOTE: Role must be defined in option called 'care_roles_that_watch' to view a webinar
 				 $ok = false;
 				 if (is_user_logged_in()) {
 					$currentUser = wp_get_current_user();					
@@ -32,20 +32,20 @@
 				<?php 
 					if( $ok ) {
 				?>
-				<div style="text-align:center">
-					<progress id="progress" value="0"></progress>
-				</div>
-				<div style="text-align:center">
-					<button id="play">Play/Pause</button>
-					<button id="restart">Restart</button>
+				<div class="webinar-buttons">
+					<button id="play">Play</button>
+					<!-- <button id="restart">Restart</button>
 					<button id="makebig">Big</button>
 					<button id="makesmall">Small</button>
-					<button id="makenormal">Normal</button>
+					<button id="makenormal">Normal</button>		-->		
+					<button type="button" id="full-screen">Full-Screen</button>
 				</div>
 
-				<div style="text-align:center">
-					<div>Volume<input id="volume" type="range" width="25"></div>
-				</div>
+				<ul class="webinar-controls">
+					<li><label for="progress">Progress</label><progress class="webinar-progress" id="progress" value="0"></progress></li>
+					<li><label for="seek-bar">Seek</label><input type="range" id="seek-bar" value="0"></li>
+					<li><label for="volume-bar">Volume</label><input type="range" id="volume-bar" min="0.0"  max="1.0" step="0.1"></li>
+				</ul>
 
 				<?php
 				}
