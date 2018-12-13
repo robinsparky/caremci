@@ -4,24 +4,31 @@
 */
 (function($) {
    $(document).ready(function(){
-       console.log( 'Record User Courses:tableclass="%s"'
-                  , care_userprofile_obj.tableclass);
+    console.log( 'Course Progress:tableclass="%s"'
+               , care_userprofile_course.tableclass);
+     console.log(care_userprofile_course);
+
+     let course = '';
+     let courseId = 0;
+     let startdate = '1970-01-01';
+     let enddate = startdate;
+     let location = 'online';
+     let watchedPct = 0.0;
+     let status = care_userprofile_webinar.statusvalues[0];
+     let statusSelect = '<select id="statusSelect" name="status">';
+     care_userprofile_webinar.statusvalues.forEach(function(status) {
+         statusSelect += '<option>' + status + '</option>';           
+      });
+      statusSelect += '</select>'
 
        var sig = '#care-resultmessage';
-       let course = '';
-       let courseId = 0;
        var longtimeout = 60000;
        var shorttimeout = 15000;
-       let completed = "Completed";
-       let pending   = "Pending";
-       let registered = "Registered";
-       let toggle_title = 'Toggle Status';
        let remove_title = 'Remove';
-       let messwindow = '<div id="caremessagewindow" style="position: absolute; top: 100px; width: 100px; height: 20px; background-color: green"></div>';
+    //    let messwindow = '<div id="caremessagewindow" style="position: absolute; top: 100px; width: 100px; height: 20px; background-color: green"></div>';
        let removeButton = "<button id='remove-course' name='remove-course' type='button'>" + remove_title + "</button>";
-       let toggleButton = "<button id='toggle-course-status' name='toggle-course-status' type='button'>" + toggle_title + "</button>";
 
-       $(sig).addClass('care-error').html(care_userprofile_obj.message);
+       $(sig).addClass('care-error').html(care_userprofile_course.message);
        setTimeout(function(){
                     $(sig).html('');
                     $(sig).removeClass('care-error');
@@ -43,16 +50,24 @@
                     }
                 });
                 if( !duplicate ) {
-                    var markup = '<tr><td id="' + courseId + '" class="course-status">' + course + '</td>';
-                    markup += "<td>" + status + "</td><td id='operations'>"
-                    markup += "</td></tr>";
-                    $("table.course-status tbody").append(markup);
-                    $("table.course-status tbody").children('tr:last-child').children('td:last-child').append(removeButton);
+                    let markup = '<tr id="' + courseId + '">';
+                    markup += '<td class="name">' + course + '</td>';
+                    markup += '<td class="startdate"><input type="date" id="start" name="startdate" value="' + startdate + '"/></td>';
+                    markup += '<td class="status">' + statusSelect + '</td>';
+                    markup += '<td class="operation">';
+                    markup += '</td></tr>';
+                    $("table." + care_userprofile_course.tableclass + " tbody").append(markup);
+                    $("table." + care_userprofile_course.tableclass + " tbody").children('tr:last-child').children('td:last-child').append(removeButton);
+                    //$("table." + care_userprofile_webinar.tableclass + " tbody").children('tr:last-child').children('td:last-child').append(toggleButton);
 
-                    $("table.course-status tbody").children('tr:last-child').children('td:last-child').append(toggleButton);
-
-                    hidden = '<input type="hidden" name="statusreports[]" value="' + courseId + "|" + course + "|" + status + '">';
-                    $(hidden).insertAfter('table.form-table');
+                    hidden = '<input type="hidden" name="statusreports[]" value="' + courseId + "|" 
+                                                                                    + course + "|" 
+                                                                                    + startdate + "|" 
+                                                                                    + enddate + "|" 
+                                                                                    + status + "|" 
+                                                                                    + watchedPct + "|" 
+                                                                                    + location + '">';
+                    $(hidden).insertAfter("table." + care_userprofile_course.tableclass);
                 }
             }
        });
@@ -66,7 +81,32 @@
             $(this).closest("tr").remove();
         });
 
-        //Modify status of a row
+        
+        //Modify startdate of a row; index=2
+        $("table." + care_userprofile_course.tableclass).on("change", ".startdate", function(e) {
+            console.log('webinar date change fired!');
+            webinarId = $(this).closest("tr").attr("id");
+            console.log("WebinarId=%d", courseId);
+            $dateCell = $(this).closest("td.startdate"); 
+            // console.log('Date Cell:');
+            // console.log($dateCell);
+            // console.log('First child:');
+            dateElement = $dateCell.children()[0];
+            //console.log(dateElement);
+            newDate = dateElement.value;
+            //console.log('new date is %s', newDate );
+            selector = "input[type='hidden'][value^='" + courseId + "']";
+            //console.log( $(selector) );
+            oldVal = $(selector).val();
+            console.log("oldVal=%s", oldVal);
+            //$statusCell.text(newStatus);
+            arrVal = oldVal.split("|");
+            console.log("newVal=%s", arrVal.join("|"));
+            arrVal[2] = newDate;
+            $(selector).val(arrVal.join("|"));
+       });
+       
+        //Modify status of a row index=4
         $("table.course-status").on("click", "button#toggle-course-status", function() {
             console.log('toggle fired!');
             courseId = $(this).closest("tr").attr("id");
@@ -76,7 +116,8 @@
             oldVal = $(selector).val();
             $statusCell.text(getNextStatus($statusCell.text()));
             arrVal = oldVal.split("|");
-            arrVal[5] = $statusCell.text();
+            arrVal[4] = $statusCell.text();
+            console.log("newVal=%s", arrVal.join("|"));
             $(selector).val(arrVal.join("|"));
        });
        

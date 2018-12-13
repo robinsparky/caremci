@@ -270,6 +270,7 @@ EOT;
 
         return;
     }
+
     /**
      * Save the posted array of webinar statuses (histories) in the db
      * @param $userId The id of the user whose webinars are being recorded
@@ -303,7 +304,7 @@ EOT;
                 
                 $edate = DateTime::createFromFormat($format, $arr[3]);
                 if( false === $edate ) {
-                    $this->log->error_log( DateTime::getLastErrors(), "Error processing start date" );
+                    $this->log->error_log( DateTime::getLastErrors(), "Error processing end date" );
                     $edate = DateTime::createFromFormat($format, '1970-01-01');
                 }
                 $this->log->error_log( $edate->format( $format ), "End Date: ");

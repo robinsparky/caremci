@@ -34,6 +34,7 @@ class RecordUserCourseProgress
     private $errobj = null;
     private $errcode = 0;
 
+    private $statuses;
     private $roles;
     private $log;
     /**
@@ -53,6 +54,7 @@ class RecordUserCourseProgress
         $this->errobj = new WP_Error();			
         $rolesWatch = esc_attr( get_option('care_roles_that_watch') );
         $this->roles = explode( ",", $rolesWatch );
+        $this->statuses = array( self::PENDING, self::COMPLETED );
         $this->log = new BaseLogger( false );
     }
 
@@ -244,13 +246,26 @@ EOT;
         $this->log->error_log("Length of status reports=" . count( $statusreports ) );
         $this->log->error_log( $statusreports );
 
-        // $targetuser = get_user_by('id', $userId);
-        // if( false === $targetuser ) {         
-        //     $this->handleErrors( __( 'Could not find target user', CARE_TEXTDOMAIN ) );
-        // }
+        $this->storeCourseProgress( $userId, $webinarreports );
 
+        return;
+    }
+    
+    /**
+     * Save the posted array of webinar statuses (histories) in the db
+     * @param $userId The id of the user whose webinars are being recorded
+     * @param $statusreports Is an array of 6 values: id, webinar name, startdate, enddate, status, watchedPct, location
+     */
+    private function storeCourseProgress( $userId, $statusreports ) {
+        $loc = __CLASS__ . '::' . __FUNCTION__;
+        $this->log->error_log( $loc );
+        //Below is an example of the element giving the "statusreports" array
+        //<input name="webinarreports[]" 
+        //      value="7211|Information Session|2018-10-28|2018-10-28|In Progress|0|unknown" 
+        //      type="hidden">
         $courses = array();
         $tracker = array();
+        $format = 'Y-m-d';
         foreach( $statusreports as $report ) {
             $arr = explode( "|", $report );
             if( !in_array( $arr[0], $tracker ) ) {
@@ -259,58 +274,64 @@ EOT;
                 $course = array();
                 $course['id']        = $arr[0];
                 $course['name']      = $arr[1];
-                $course["location"]  = $arr[2];
-                $course["startDate"] = $arr[3];
-                $course["endDate"]   = $arr[4];
-                $course['status']    = $arr[5];
+                $sdate = DateTime::createFromFormat($format, $arr[2]);
+                if( false === $sdate ) {
+                    $this->log->error_log( DateTime::getLastErrors(), "Error processing start date" );
+                    $sdate = DateTime::createFromFormat($format, '1970-01-01');
+                }
+                $this->log->error_log( $sdate->format( $format ), "Start Date: ");
+                $course["startDate"] = $sdate->format( $format );
+                
+                $edate = DateTime::createFromFormat($format, $arr[3]);
+                if( false === $edate ) {
+                    $this->log->error_log( DateTime::getLastErrors(), "Error processing end date" );
+                    $edate = DateTime::createFromFormat($format, '1970-01-01');
+                }
+                $this->log->error_log( $edate->format( $format ), "End Date: ");
+                $course["endDate"] = $edate->format( $format );
+
+                $course['status']    = $arr[4];
+                $course['watchedPct'] = (float)$arr[5];
+                $course['location'] = $arr[6];
                 array_push( $courses, $course );
             }
         }
         
-        $this->log->error_log("Courses...");
-        $this->log->error_log( $courses );
+        $this->log->error_log( $courses, "Courses..." );
 
-        //TODO: Need to make sure that the course still exists in carecourse's.
+        //TODO: Need to make sure that the webinars still exists in carewebinar's.
         $len = count( $courses );
         if( 0 === $len ) {
-            if( delete_user_meta( $userId, RecordUserCourseProgress::META_KEY) ) {
-                $mess = "Removed all course registrations.";
+            if( delete_user_meta( $userId, self::META_KEY ) ) {
+                $mess = "Removed all course progress reports.";
             }
             else {
-                $mess = "No course registrations removed.";
+                $mess = "No course progress reports exist so none were removed.";
             }
         }
         else {
             //array is returned because $single is false
-            $prev_courses = get_user_meta($userId, RecordUserCourseProgress::META_KEY, false );
-            if( count( $prev_courses ) < 1 ) {
-                $meta_id = add_user_meta( $userId, RecordUserCourseProgress::META_KEY, $courses, true );
-                $mess = sprintf("Added %d course %s. (Meta id=%d)", $len, $len === 1 ? 'registration' : 'registrations', $meta_id );
+            $prev_webinars = get_user_meta($userId, self::META_KEY, false );
+            if( count( $prev_webinars ) < 1 ) {
+                $meta_id = add_user_meta( $userId, self::META_KEY, $webinars, true );
+                $mess = sprintf("Added %d course %s. (Meta id=%d)", $len, $len === 1 ? 'progress report' : 'progress reports', $meta_id );
             }
             else {
-                $meta_id = update_user_meta( $userId, RecordUserCourseProgress::META_KEY, $courses );
+                $meta_id = update_user_meta( $userId, self::META_KEY, $webinars );
                 if( true === $meta_id ) {
-                    $mess = sprintf("Updated %d course %s.", $len, $len === 1 ? 'registration' : 'registrations' );
+                    $mess = sprintf("Updated %d course %s.", $len, $len === 1 ? 'progress report' : 'progress reports' );
                 }
                 elseif( is_numeric( $meta_id ) ) {
-                    $mess = sprintf("Added %d course %s. (Meta id=%d)", $len, $len === 1 ? 'registration' : 'registrations', $meta_id );
+                    $mess = sprintf("Added %d course %s. (Meta id=%d)", $len, $len === 1 ? 'progress report' : 'progress reports', $meta_id );
                 }
-
             }
             if( false === $meta_id ) {
-                $mess = "Course registrations and status were not added/updated.";
+                $mess = "Course progress reports were not added/updated.";
             }
         }
 
-        $_SESSION['coursereportmessage'] = $mess;
+        return $mess;
 
-        return;
-        // $response = array();
-        // $response["message"] = $mess;
-        // $response["returnData"] = $courses;
-        // wp_send_json_success( $response );
-    
-        // wp_die(); // All ajax handlers die when finished
     }
  
     /**
@@ -323,9 +344,10 @@ EOT;
         $loc = __CLASS__ . '::' . __FUNCTION__;
         $this->log->error_log( $loc );
 
-        $mess = "Greetings!";
+        $mess = "";
         return array( 'tableclass' => self::TABLE_CLASS
                     , 'message' => $mess
+                    , 'statusvalues' => $this->statuses
                    );
     }
 

@@ -10,10 +10,9 @@ require get_stylesheet_directory() . '/inc/class-CourseRegisterByEvent.php';
  * Register ajax-based classes
  * */
 //ReportCourseProgress::register();
-WatchWebinarProgress::register();
 //RecordUserCourseProgress::register();
+WatchWebinarProgress::register();
 RecordUserWebinarProgress::register();
-//CareMediaSelector::register();
 ManagementReports::register();
 
 

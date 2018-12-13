@@ -14,6 +14,9 @@
        let webinar = '';
        let webinarId = 0;
        let startdate = '1970-01-01';
+       let enddate = startdate;
+       let location = 'online';
+       let watchedPct = 0.0;
        let status = care_userprofile_webinar.statusvalues[0];
        let statusSelect = '<select id="statusSelect" name="status">';
        care_userprofile_webinar.statusvalues.forEach(function(status) {
@@ -59,7 +62,13 @@
                     $("table." + care_userprofile_webinar.tableclass + " tbody").children('tr:last-child').children('td:last-child').append(removeButton);
                     //$("table." + care_userprofile_webinar.tableclass + " tbody").children('tr:last-child').children('td:last-child').append(toggleButton);
 
-                    hidden = '<input type="hidden" name="webinarreports[]" value="' + webinarId + "|" + webinar + "|" + startdate + "|" + status + '">';
+                    hidden = '<input type="hidden" name="webinarreports[]" value="' + webinarId + "|" 
+                                                                                    + webinar + "|" 
+                                                                                    + startdate + "|" 
+                                                                                    + enddate + "|" 
+                                                                                    + status + "|" 
+                                                                                    + watchedPct + "|" 
+                                                                                    + location + '">';
                     $(hidden).insertAfter("table." + care_userprofile_webinar.tableclass);
                 }
             }
@@ -90,14 +99,15 @@
             selector = "input[type='hidden'][value^='" + webinarId + "']";
             //console.log( $(selector) );
             oldVal = $(selector).val();
-            //console.log("oldVal=%s", oldVal);
+            console.log("oldVal=%s", oldVal);
             //$statusCell.text(newStatus);
             arrVal = oldVal.split("|");
+            console.log("newVal=%s", arrVal.join("|"));
             arrVal[2] = newDate;
             $(selector).val(arrVal.join("|"));
        });
 
-        //Modify status of a row; index=3
+        //Modify status of a row; index=4
         $("table." + care_userprofile_webinar.tableclass).on("change", "#statusSelect", function(e) {
             console.log('webinar status select fired!');
             newStatus = e.target.options[e.target.selectedIndex].text;
@@ -110,7 +120,8 @@
             console.log("oldVal=%s", oldVal);
             //$statusCell.text(newStatus);
             arrVal = oldVal.split("|");
-            arrVal[3] = newStatus;
+            arrVal[4] = newStatus;
+            console.log("newVal=%s", arrVal.join("|"));
             $(selector).val(arrVal.join("|"));
        });
        
