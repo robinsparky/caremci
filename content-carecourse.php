@@ -4,7 +4,7 @@
 		<div class="media-body">
 			<?php // Check Image size for fullwidth template
 				 appointment_post_thumbnail('','img-responsive');
-				 appointment_post_meta_content(); 
+				 //appointment_post_meta_content(); 
 				 $price = get_post_meta( get_the_ID(), Course::PRICE_META_KEY, true );
 				 $duration = get_post_meta( get_the_ID(), Course::DURATION_META_KEY, true );
 				 $needsApproval = get_post_meta( get_the_ID(), Course::NEEDS_APPROVAL_META_KEY, true );

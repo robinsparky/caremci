@@ -6,7 +6,7 @@ get_header();  ?>
 			<div class="row">
 				<div class="col-md-6">
 					<div class="page-title"><h1>
-        <?php _e( "Courses", 'care-mci' ); ?>
+        <?php _e( "Webinars", CARE_TEXTDOMAIN ); ?>
         <?php if( get_post_meta( get_the_ID(), 'post_description', true ) != '' ) { ?>
         <p><?php echo get_post_meta( get_the_ID(), 'post_description', true ) ; ?></p>
         <?php } ?>
@@ -39,7 +39,7 @@ get_header();  ?>
                 <hr style="clear:left;">
 				<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
                 <small>				
-					<?php care_mci_get_term_links( $post->ID, 'coursecategory' ); ?>
+					<?php care_mci_get_term_links( $post->ID, 'carewebinartax' ); ?>
                 </small>
                 <?php the_excerpt() ?> 
 

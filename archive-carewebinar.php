@@ -52,10 +52,6 @@ get_header();  ?>
 					<?php care_mci_get_term_links( $post->ID, 'carewebinartax' ); 
 					?>
 					</div>
-					<details class="webinar-meta">
-						<summary>Data</summary>
-						<p>Video Available: <?php echo $hasVideo ?></p>
-					</details>
                 </small>
                 <span> <?php echo the_excerpt() ?> </span>
 
