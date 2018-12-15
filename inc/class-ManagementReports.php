@@ -128,12 +128,16 @@ class ManagementReports
         
         $selection .= "</select>";
 
+        $curYear = (new DateTime())->format("Y");
+        $startParam = $curYear . "-01-01";
+        $endParam   = $curYear . "-12-31";
+
         $out = "<table class='management-report'>";
         $out .= "<thead><th>Select Report</th><th>Starting</th><th>Ending</th></thead>";
         $out .= "<tbody>";
         $out .= "<tr><td>$selection</td>";
-        $out .= "<td><input type='date' id='care_report_start' name='report_start' value='2018-1-1'></td>";
-        $out .= "<td><input type='date' id='care_report_end' name='report_end' value='2018-12-31'></td>";
+        $out .= "<td><input type='date' id='care_report_start' name='report_start' value='$startParam'></td>";
+        $out .= "<td><input type='date' id='care_report_end' name='report_end' value='$endParam'></td>";
         $out .= "<td><button id='care_get_report' name='care_get_report' type='button'>Run</button>";
         $out .= " <button id='care_clear_report' name='care_clear_report' type='button'>Clear</button></td>";
         $out .= "</tr></tbody></table>";
@@ -370,7 +374,7 @@ class ManagementReports
         $loc = __CLASS__ . '::' . __FUNCTION__;
         $this->log->error_log( $loc );
 
-        $mess = "Greetings!";
+        $mess = "";
         return array('ajaxurl' => admin_url( 'admin-ajax.php' )
                     ,'action' => self::ACTION
                     ,'security' => wp_create_nonce(self::NONCE)
