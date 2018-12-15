@@ -23,7 +23,9 @@ get_template_part('index','banner'); ?>
 					?>
 
 				<!--/Blog Author-->
-				<?php } comments_template('',true);  } ?>	
+			<?php } 
+				comments_template('',true);  
+			} ?>	
 		</div>
 			<!-- /Blog Area -->		
 			<!--Sidebar Area-->

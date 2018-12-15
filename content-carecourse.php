@@ -15,12 +15,13 @@
 				<h4><span>Price: $<?php echo $price ?></span>
 					&nbsp;<span>Duration: <?php echo $duration ?> hours</span>
 					&nbsp;<span><?php echo $instructions ?></span>
-					</h4>
-				<?php $courseId = get_the_ID(); $allSessions = CourseSession::getCourseSessions( $courseId );
+				</h4>
+				<?php $courseId = get_the_ID(); 
+				    $allSessions = CourseSession::getCourseSessions( $courseId );
 					error_log(__FILE__ . " courseId=$courseId");
 					error_log( print_r( $allSessions, true ) );
 				?>
-				<?php if(count( $allSessions ) > 0 ) { ?>
+				<?php if( count( $allSessions ) > 0 ) { ?>
 					<table class="course_sessions"> 
 						<caption>Course Sessions</caption>
 						<thead>
@@ -34,7 +35,12 @@
 						</tr>
 						</thead>
 						<tbody>
-						<?php foreach( $allSessions as $session ) { ?>
+						<?php foreach( $allSessions as $session ) { 
+							$now = new DateTime();
+							error_log($session['event_start_date']);
+							$start = new DateTime( $session['event_start_date'] );
+							if ( $start < $now ) continue;
+							?>
 							<tr>
 								<td><?php echo $session['location_name']?></td>
 								<td><?php echo $session['event_start_date']?></td>
@@ -72,10 +78,8 @@
 					<?php } ?>
 						</tbody>
 					</table>
-				<?php } ?>
-				
-				<?php		
-				// call editor content of post/page	
+				<?php } 	
+				// call editor content of post/page	s
 				the_content( __('Read More', 'appointment' ) );
 				wp_link_pages( );
 			   ?>
