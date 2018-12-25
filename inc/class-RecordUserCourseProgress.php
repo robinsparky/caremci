@@ -30,6 +30,8 @@ class RecordUserCourseProgress
 
     const TABLE_CLASS = 'course-status';
 
+    const DEFAULT_LOCATION = 'unknown';
+
     private $ajax_nonce = null;
     private $errobj = null;
     private $errcode = 0;
@@ -290,9 +292,9 @@ EOT;
                 $this->log->error_log( $edate->format( $format ), "End Date: ");
                 $course["endDate"] = $edate->format( $format );
 
-                $course['status']    = $arr[4];
+                $course['status']    = isset( $arr[4] ) ? $arr[4] : self::PENDING;
                 $course['watchedPct'] = (float)$arr[5];
-                $course['location'] = $arr[6];
+                $course['location'] = isset( $arr[6] ) ? $arr[6] : self::DEFAULT_LOCATION;
                 array_push( $courses, $course );
             }
         }

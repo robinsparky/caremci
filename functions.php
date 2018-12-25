@@ -140,3 +140,22 @@ add_filter( 'auth_cookie_expiration', 'keep_me_logged_in_for_1_year' );
 function keep_me_logged_in_for_1_year( $expirein ) {
     return YEAR_IN_SECONDS; //31556926; // 1 year in seconds
 }
+
+/*
+   ==============================
+   Disable all mail temporarily
+   REMOVE when live
+   ==============================
+*/
+// add_filter('wp_mail', 'disable_email_filter');
+// function disable_email_filter($result = '') {
+
+// 	$to = '';
+// 	$subject = '';
+// 	$message = '';
+// 	$headers = '';
+// 	$attachments = array ();
+
+// 	return compact('to', 'subject', 'message', 'headers', 'attachments');
+
+// }

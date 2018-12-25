@@ -129,7 +129,7 @@ class ManagementReports
         $selection .= "</select>";
 
         $curYear = (new DateTime())->format("Y");
-        $startParam = $curYear . "-01-01";
+        $startParam = "1970-01-01";
         $endParam   = $curYear . "-12-31";
 
         $out = "<table class='management-report'>";
