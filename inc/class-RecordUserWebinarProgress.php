@@ -112,9 +112,7 @@ class RecordUserWebinarProgress
             }
         }
 
-        if( current_user_can( 'manage_options' ) ) $ok = true;
-
-        if( !$ok ) return;
+        if( !current_user_can( 'manage_options' ) || !$ok ) return;
     ?>
     <h3>Webinar Progress Reports</h3>
 		<table class="form-table">
