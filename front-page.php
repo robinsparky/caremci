@@ -34,7 +34,7 @@
 		 <!-- MCI or PASS Area -->
 			<div class="<?php appointment_post_layout_class(); ?>" >
 
-				<img src="<?php echo home_url(); ?>/wp-content/uploads/Care-Pass-landing-page-1280-x-800-.jpg" usemap="#program">
+				<img src="<?php echo home_url(); ?>/wp-content/uploads/Care-Pass-landing-page-5-5-1.jpg" usemap="#program">
 
 			</div>
 		 <map name="program">
