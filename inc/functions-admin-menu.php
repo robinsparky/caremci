@@ -60,10 +60,10 @@ function care_theme_create_page() {
     require_once get_stylesheet_directory() . '/inc/templates/mci-settings.php';
 }
 
-function care_theme_dashboard_page() {
-    //generation of our admin sub page
-    require_once get_stylesheet_directory() . '/inc/templates/mci-dashboard.php';
-}
+// function care_theme_dashboard_page() {
+//     //generation of our admin sub page
+//     require_once get_stylesheet_directory() . '/inc/templates/mci-dashboard.php';
+// }
 
 function care_custom_settings() {
     register_setting( 'care-settings-group' //Options group
@@ -123,8 +123,8 @@ function care_courses_page_size_option() {
 }
 
 function webinarPercentComplete() {
-    $pctCompleteFactor = esc_attr( get_option('pass_webinar_pct_complete', 85) );
-    echo '<input type="number" min="10.0" max="100.0" step="1" name="pass_webinar_pct_complete" value="' . $pctCompleteFactor . '" /><p>Max 100 and at least 10. Default is 85</p>';
+    $pctCompleteFactor = esc_attr( get_option('care_webinar_pct_complete', 85) );
+    echo '<input type="number" min="10.0" max="100.0" step="1" name="care_webinar_pct_complete" value="' . $pctCompleteFactor . '" /><p>Max 100 and at least 10. Default is 85</p>';
 }
 
 function webinarWatchRoles() {
