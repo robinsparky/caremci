@@ -258,7 +258,7 @@ EOT;
             $webinarreports = array();
         }
 
-        if( is_string( $webinarrepoSErts ) ) {
+        if( is_string( $webinarreports ) ) {
             $s = $webinarreports;
             $webinarreports = array();
             array_push( $webinarreports, $s );
@@ -292,9 +292,9 @@ EOT;
                 $this->log->error_log( $report );
                 array_push( $tracker, $arr[0] );
                 $webinar = array();
-                $webinar['id']        = $arr[0];
-                $webinar['name']      = $arr[1];
-                $sdate = DateTime::createFromFormat($format, $arr[2]);
+                $webinar['id']        = sanitize_text_field($arr[0]);
+                $webinar['name']      = sanitize_text_field($arr[1]);
+                $sdate = DateTime::createFromFormat($format, sanitize_text_field($arr[2]));
                 if( false === $sdate ) {
                     $this->log->error_log( DateTime::getLastErrors(), "Error processing start date" );
                     $sdate = DateTime::createFromFormat($format, '1970-01-01');
@@ -302,7 +302,7 @@ EOT;
                 $this->log->error_log( $sdate->format( $format ), "Start Date: ");
                 $webinar["startDate"] = $sdate->format( $format );
                 
-                $edate = DateTime::createFromFormat($format, $arr[3]);
+                $edate = DateTime::createFromFormat($format, sanitize_text_field($arr[3]));
                 if( false === $edate ) {
                     $this->log->error_log( DateTime::getLastErrors(), "Error processing end date" );
                     $edate = DateTime::createFromFormat($format, '1970-01-01');
@@ -310,9 +310,9 @@ EOT;
                 $this->log->error_log( $edate->format( $format ), "End Date: ");
                 $webinar["endDate"] = $edate->format( $format );
 
-                $webinar['status']    = isset( $arr[4] ) ? $arr[4] : self::PENDING;
-                $webinar['watchedPct'] = (float)$arr[5];
-                $webinar['location'] = isset( $arr[6] ) ? $arr[6] : self::DEFAULT_LOCATION;
+                $webinar['status']    = isset( $arr[4] ) ? sanitize_text_field($arr[4]) : self::PENDING;
+                $webinar['watchedPct'] = (float)sanitize_text_field($arr[5]);
+                $webinar['location'] = isset( $arr[6] ) ? sanitize_text_field($arr[6]) : self::DEFAULT_LOCATION;
                 array_push( $webinars, $webinar );
             }
         }

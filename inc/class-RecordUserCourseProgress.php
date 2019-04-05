@@ -274,9 +274,9 @@ EOT;
                 $this->log->error_log( $report );
                 array_push( $tracker, $arr[0] );
                 $course = array();
-                $course['id']        = $arr[0];
-                $course['name']      = $arr[1];
-                $sdate = DateTime::createFromFormat($format, $arr[2]);
+                $course['id']        = sanitize_text_field($arr[0]);
+                $course['name']      = sanitize_text_field($arr[1]);
+                $sdate = DateTime::createFromFormat($format, sanitize_text_field($arr[2]));
                 if( false === $sdate ) {
                     $this->log->error_log( DateTime::getLastErrors(), "Error processing start date" );
                     $sdate = DateTime::createFromFormat($format, '1970-01-01');
@@ -284,7 +284,7 @@ EOT;
                 $this->log->error_log( $sdate->format( $format ), "Start Date: ");
                 $course["startDate"] = $sdate->format( $format );
                 
-                $edate = DateTime::createFromFormat($format, $arr[3]);
+                $edate = DateTime::createFromFormat($format, sanitize_text_field($arr[3]));
                 if( false === $edate ) {
                     $this->log->error_log( DateTime::getLastErrors(), "Error processing end date" );
                     $edate = DateTime::createFromFormat($format, '1970-01-01');
@@ -292,9 +292,9 @@ EOT;
                 $this->log->error_log( $edate->format( $format ), "End Date: ");
                 $course["endDate"] = $edate->format( $format );
 
-                $course['status']    = isset( $arr[4] ) ? $arr[4] : self::PENDING;
-                $course['watchedPct'] = (float)$arr[5];
-                $course['location'] = isset( $arr[6] ) ? $arr[6] : self::DEFAULT_LOCATION;
+                $course['status']    = isset( $arr[4] ) ? sanitize_text_field($arr[4]) : self::PENDING;
+                $course['watchedPct'] = (float)sanitize_text_field($arr[5]);
+                $course['location'] = isset( $arr[6] ) ? sanitize_text_field($arr[6]) : self::DEFAULT_LOCATION;
                 array_push( $courses, $course );
             }
         }
