@@ -34,15 +34,15 @@
 		 <!-- MCI or PASS Area -->
 			<div class="<?php appointment_post_layout_class(); ?>" >
 
-				<img src="<?php echo home_url(); ?>/wp-content/uploads/Care-Pass-landing-page-5-5-1.jpg" usemap="#program">
+				<img src="<?php echo home_url(); ?>/wp-content/uploads/CARE-Landing-Page.png" usemap="#program">
 
 			</div>
 		 <map name="program">
 		 <?php
 		 	$passSite = str_replace( "care", "pass", home_url());
 		 ?>
-			<area shape="rect" coords="200,300,600,780" alt="PASS" href="<?php echo $passSite;?>">
-			<area shape="rect" coords="650,300,1100,780" alt="MCI" href="<?php echo home_url();?>/welcome">
+			<area shape="rect" coords="259,523,605,916" alt="PASS" href="<?php echo $passSite;?>">
+			<area shape="rect" coords="673,523,1020,916" alt="MCI" href="<?php echo home_url();?>/welcome">
 		 </map>
 		<!-- /MCI or PASS Area -->	
 		</div>
