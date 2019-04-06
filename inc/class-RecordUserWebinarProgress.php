@@ -266,7 +266,8 @@ EOT;
 
         $this->log->error_log("Length of webinar reports=" . count( $webinarreports ) );
         $this->log->error_log( $webinarreports );
-        $this->storeWebinarProgress( $userId, $webinarreports );
+        $mess = $this->storeWebinarProgress( $userId, $webinarreports );
+        $this->log->error_log( $mess, "Final Message" );
 
         return;
     }

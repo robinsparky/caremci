@@ -21,7 +21,7 @@ class WatchWebinarProgress
     const ACTION   = 'watchWebinarProgess';
     const NONCE    = 'watchWebinarProgess';
 
-    const PCT_COMPLETE_OPTION_NAME = 'pass_webinar_pct_complete';
+    const PCT_COMPLETE_OPTION_NAME = 'care_webinar_pct_complete';
 
     private $ajax_nonce = null;
     private $errobj = null;
