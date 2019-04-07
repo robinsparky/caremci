@@ -138,8 +138,10 @@
             video.currentTime = time;
         }).on('mousedown', function(e) {
             video.pause();
+            play.trigger('click');
         }).on('mouseup', function(e) {
             video.play();
+            play.trigger('click');
         });
 
         video.addEventListener('timeupdate', function() {
@@ -152,8 +154,6 @@
                                                     let pct = (100*prog).toFixed(2);
                                                     progress.val(prog);
                                                     //$(sig).html('<h2>' + pct + '%</h2>')
-                                                    // Update the slider value
-                                                    seekBar.val(prog);
                                                 }	
                                             });
                                             
