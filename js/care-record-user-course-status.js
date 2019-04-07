@@ -83,26 +83,21 @@
 
         
         //Modify startdate of a row; index=2
-        $("table." + care_userprofile_course.tableclass).on("change", ".startdate", function(e) {
+        $("table." + care_userprofile_course.tableclass).on("change", "input[type='date']", function(e) {
             console.log('webinar date change fired!');
             webinarId = $(this).closest("tr").attr("id");
             console.log("WebinarId=%d", courseId);
-            $dateCell = $(this).closest("td.startdate"); 
-            // console.log('Date Cell:');
-            // console.log($dateCell);
-            // console.log('First child:');
-            dateElement = $dateCell.children()[0];
-            //console.log(dateElement);
+            dateElement = $(this)[0];
+            console.log(dateElement);
             newDate = dateElement.value;
-            //console.log('new date is %s', newDate );
+            console.log('new date is %s', newDate );
             selector = "input[type='hidden'][value^='" + courseId + "']";
             //console.log( $(selector) );
             oldVal = $(selector).val();
             console.log("oldVal=%s", oldVal);
-            //$statusCell.text(newStatus);
             arrVal = oldVal.split("|");
-            console.log("newVal=%s", arrVal.join("|"));
             arrVal[2] = newDate;
+            console.log("newVal=%s", arrVal.join("|"));
             $(selector).val(arrVal.join("|"));
        });
        

@@ -84,26 +84,25 @@
         });
         
         //Modify startdate of a row; index=2
-        $("table." + care_userprofile_webinar.tableclass).on("change", ".startdate", function(e) {
+        $("table." + care_userprofile_webinar.tableclass).on("change", "input[type='date']", function(e) {
             console.log('webinar date change fired!');
             webinarId = $(this).closest("tr").attr("id");
             console.log("WebinarId=%d", webinarId);
-            $dateCell = $(this).closest("td.startdate"); 
-            // console.log('Date Cell:');
-            // console.log($dateCell);
-            // console.log('First child:');
-            dateElement = $dateCell.children()[0];
-            //console.log(dateElement);
+            dateElement = $(this)[0];
+            console.log(dateElement);
             newDate = dateElement.value;
-            //console.log('new date is %s', newDate );
+            console.log('new date is %s', newDate );
             selector = "input[type='hidden'][value^='" + webinarId + "']";
             //console.log( $(selector) );
             oldVal = $(selector).val();
             console.log("oldVal=%s", oldVal);
-            //$statusCell.text(newStatus);
             arrVal = oldVal.split("|");
-            console.log("newVal=%s", arrVal.join("|"));
             arrVal[2] = newDate;
+            // endDate = getDateFromString(arrVal[3]);
+            // startDate = getDateFromString(arrVal[2]);
+            // if( startDate > endDate ) arrVal[3] = arrVal[2];
+
+            console.log("newVal=%s", arrVal.join("|"));
             $(selector).val(arrVal.join("|"));
        });
 
@@ -136,5 +135,22 @@
             default:
                 return pending;
         }
+   }
+
+   function getDateFromString( strDate ) {
+       if(strDate.indexOf('-') > 0 ) {
+            parts = strDate.split('-'); //array of year month day
+            result = new Date( parts[0], parts[1], parts[2] );
+       }
+       else if(strDate.indexOf('/') > 0 ) {
+            parts = strDate.split('/'); //array of month day year
+            result = new Date( parts[2], parts[0], parts[1] );
+       }
+       else {
+           result = new Date( strDate ); //give it a shot
+       }
+
+       if (isNaN( result ) ) result = Date.now();
+       return result;
    }
 })(jQuery);
