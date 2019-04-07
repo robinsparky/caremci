@@ -212,48 +212,18 @@ class ReportCourseProgress
         $user_id = (int) $currentuser->ID;
         error_log( sprintf("%s: User id=%d and email=%s",$loc, $user_id, $currentuser->user_email ));
     
-        //Setup the course selection options
-        // $select_title = __('---Select A Course or Webinar To Register---', CARE_TEXTDOMAIN );
-        // $tmpl = '<option value="%s">%s</option>';
-        // $selection = '<select id ="course-select">';
-        // $selection .= '<option value="0" selected="selected">' . $select_title . '</option>';
-        // $args = array( 'post_type' => 'carecourse', 'posts_per_page' => -1 ); 
-        // $loop = new WP_Query( $args );
-        // if ($loop->have_posts()) {
-        //     while ( $loop->have_posts() ) {
-        //         $loop->the_post();
-        //         $selection .= sprintf( $tmpl, get_the_ID(), get_the_title() );
-        //     }
-        // }
-        // else {
-        //     $selection .= sprintf( $tmpl, 0, "No Courses found" );
-        // }    
-        // $selection .= "</select>";
-        // // Reset Post Data 
-        // wp_reset_postdata();
-        // wp_reset_query();
-
-        // $register_title = __('Register', CARE_TEXTDOMAIN );
-        // $toggle_title   = __('Toggle Status', CARE_TEXTDOMAIN );
-        // $remove_title   = __('Remove Registration', CARE_TEXTDOMAIN );
-        // $save_title     = __('Save', CARE_TEXTDOMAIN );
         $overall_title  = __('Course and Webinar Progress Report', CARE_TEXTDOMAIN );
 
         $out  = "<div id=\"progress-container\">";
         $out .= "<h2>$overall_title</h2>";
         
-        //Now provide means to record progress or register re other courses
-        // $register = "<button id='register-for-course' name='register-for-course' type='button'>$register_title</button>";
-        // $complete = "<button id='record-course-completed' name='record-course-completed' type='button'>$toggle_title</button>";
-        // $remove   = "<button id='remove-course' name='remove-course' type='button'>$remove_title</button>";
-        // $done     = "<button id='done-course-work' name='done-course-work' type='button'>$save_title</button>";
         $caption = "Please contact your case manager if you have questions.";
 
         //Currently registered course statuses
         $out .= "<hr>";
         $out .= '<table class="coursestatus">';
         $out .= '<caption style="caption-side:bottom; align:right;">' . $caption . '</caption>';
-        $out .= '<thead><th>Course</th><th>Location</th><th>Start Date</th><th>End Date</th><th>Status</th></thead>';
+        $out .= '<thead><th>Course</th><th>Location</th><th>Start Date</th><th>Status</th></thead>';
         $out .= '<tbody>';
         //$out .= sprintf("<tr id=\"add\"><td id=\"selection\" colspan=\"2\">%s</td><td>%s %s</td></tr>", $selection, $complete, $remove );
 
@@ -262,7 +232,6 @@ class ReportCourseProgress
 
         $templ = <<<EOT
             <tr id="%d">
-            <td>%s</td>
             <td>%s</td>
             <td>%s</td>
             <td>%s</td>
@@ -279,7 +248,6 @@ EOT;
                               , $course["name"]
                               , $course["location"]
                               , $course["startDate"]
-                              , $course["endDate"]
                               , $course["status"] );
                 $out .= $row;
             }

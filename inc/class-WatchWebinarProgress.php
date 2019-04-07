@@ -260,7 +260,7 @@ class WatchWebinarProgress
         $out .= "<hr>";
         $out .= '<table class="webinarstatus">';
         $out .= '<caption style="caption-side:bottom; align:right;">' . $caption . '</caption>';
-        $out .= '<thead><th>Webinar</th><th>Location</th><th>Start Date</th><th>End Date</th><th>Status</th></thead>';
+        $out .= '<thead><th>Webinar</th><th>Location</th><th>Start Date</th><th>Status</th></thead>';
         $out .= '<tbody>';
 
         //Note: recorded_courses is a 2-d array
@@ -268,7 +268,6 @@ class WatchWebinarProgress
 
         $templ = <<<EOT
             <tr id="%d">
-            <td>%s</td>
             <td>%s</td>
             <td>%s</td>
             <td>%s</td>
@@ -285,7 +284,6 @@ EOT;
                             , $webinar["name"]
                             , $webinar["location"]
                             , $webinar["startDate"]
-                            , $webinar["endDate"]
                             , $webinar["status"] );
             $out .= $row;
         }
