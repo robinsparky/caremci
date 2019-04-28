@@ -39,16 +39,12 @@ get_header();  ?>
                 <hr style="clear:left;">
 				<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
                 <small>				
-					<?php 					
+					<?php care_mci_get_term_links( $post->ID, 'coursecategory' );					
 					$price = get_post_meta( get_the_ID(), Course::PRICE_META_KEY, true );
 					$duration = get_post_meta( get_the_ID(), Course::DURATION_META_KEY, true );
 					$needsApproval = get_post_meta( get_the_ID(), Course::NEEDS_APPROVAL_META_KEY, true );
 					$instructions = $needsApproval === 'yes' ? 'Note: Requires case manager approval' : '';
 					?>	
-					<div>		
-						<?php care_mci_get_term_links( $post->ID, 'coursecategory' ); 
-					?>
-					</div>
 					<div class="coursemeta" style="float:right">
 					<span>Price: $<?php echo $price ?></span>
 					&nbsp;<span>Duration: <?php echo $duration ?> hours</span>
