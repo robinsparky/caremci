@@ -134,7 +134,7 @@ class Course extends BaseCustomMediaPostType {
 
 	public function __construct() {
 		$loc = __CLASS__ . '::' . __FUNCTION__;
-		$this->log = new BaseLogger( true );
+		$this->log = new BaseLogger( false );
 
 		$this->mediaMetaBoxId = 'care_course_video_meta_box';
 		//$this->curriculum = array( 'recommended' =>'Recommended', 'essential' => 'Essential' );

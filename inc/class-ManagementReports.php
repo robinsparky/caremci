@@ -347,6 +347,7 @@ class ManagementReports
     private function queryUserMeta( $metaKey ) {
         $loc = __CLASS__ . '::' . __FUNCTION__;
 
+        $startTime = microtime( true );
         global $wpdb;
         $sql = "SELECT u.display_name as username
                         , m.umeta_id as meta_id
@@ -359,6 +360,7 @@ class ManagementReports
         $result = $wpdb->get_results( $query, ARRAY_A );
       
         $this->log->error_log($result, "Query results:");
+		$this->log->error_log( sprintf("%0.6f",micro_time_elapsed( $startTime ) ), $loc . ": Elapsed Micro Elapsed Time");
 
         return $result;
 

@@ -58,7 +58,7 @@ class RecordUserWebinarProgress
         $this->roles = explode( ",", $rolesWatch );
         $this->statuses = array( self::PENDING, self::COMPLETED );
 
-        $this->log = new BaseLogger( true );
+        $this->log = new BaseLogger( false );
     }
 
     public function registerScript( $hook ) {

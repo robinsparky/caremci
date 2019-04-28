@@ -36,6 +36,7 @@ class CourseSession {
 	public static function getCourseSessions( $courseId ) {
 		$loc = __CLASS__ . '::' . __FUNCTION__;
 		error_log( "$loc --> courseId=$courseId" );
+		$startTime = microtime( true );
 
 		global $wpdb;
 		$eventsTable = $wpdb->prefix . 'em_events';
@@ -57,7 +58,8 @@ class CourseSession {
 					and em.meta_value = '%s';";
 		$sql = $wpdb->prepare($sqlText, self::COURSEID_META_KEY, $courseId );
 		$sessions = $wpdb->get_results( $sql, ARRAY_A );
-		
+		error_log( sprintf("%0.6f",micro_time_elapsed( $startTime ) ), $loc . ": Elapsed Micro Elapsed Time");
+
 		return $sessions;
 
 	}
@@ -243,7 +245,8 @@ class CourseSession {
 	public function sessionEventLoad( $EM_Event ) {
         $loc = __CLASS__ . '::' . __FUNCTION__;
 		$this->log->error_log( $loc );
-		
+		$startTime = time();
+
 		global $wpdb;
 		$sqlText = "SELECT meta_value from " . EM_META_TABLE . " WHERE object_id=%d AND meta_key='%s'";
 		$sql = $wpdb->prepare( $sqlText
@@ -266,6 +269,9 @@ class CourseSession {
 		else {
 			$EM_Event->course_Title = '';
 		}
+		
+		$this->log->error_log( time_elapsed( $startTime ) ,  $loc . ": Elapsed Time" );
+		$this->log->error_log( sprintf("%0.6f",micro_time_elapsed( $startTime ) ), $loc . ": Elapsed Micro Elapsed Time");
 	}
 	
 	/**
