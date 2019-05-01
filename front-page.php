@@ -8,13 +8,14 @@
 	<?php 
 	$appointment_options=theme_setup_data(); 
 	$header_setting = wp_parse_args(  get_option( 'appointment_options', array() ), $appointment_options);
-	if($header_setting['upload_image_favicon']!=''){ ?>
+	if( $header_setting['upload_image_favicon'] != '' ) { ?>
 	<link rel="shortcut icon" href="<?php  echo $header_setting['upload_image_favicon']; ?>" /> 
 	<?php } ?>
 	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
 	<?php wp_head(); ?>
-	</head>
-	<body <?php body_class(); ?> >
+</head>
+<body <?php body_class(); ?> >
+<div class="graybox"></div>
 
 <?php if ( get_header_image() != '') {?>
 <div class="header-img">
@@ -33,18 +34,31 @@
 	<div class="container">
 		<div class="row">
 		 <!-- MCI or PASS Area -->
-			<div class="<?php appointment_post_layout_class(); ?>" >
-
-				<img src="<?php echo home_url(); ?>/wp-content/uploads/CARE-Landing-Page.png" usemap="#program">
-
-			</div>
-		 <map name="program">
 		 <?php
 		 	$passSite = str_replace( "care", "pass", home_url());
 		 ?>
-			<area shape="rect" coords="259,523,605,916" alt="PASS" href="<?php echo $passSite;?>">
-			<area shape="rect" coords="673,523,1020,916" alt="MCI" href="<?php echo home_url();?>/welcome">
-		 </map>
+			<div class="<?php //appointment_post_layout_class(); ?> mainlanding" >
+			<!-- New Layout -->
+
+				<img class="mainlanding" src="<?php echo home_url(); ?>/wp-content/uploads/CARE_logo_PNG.png">
+				<h2>CARE Centre can help you achieve nursing registration and get started on your Canadian nursing career.
+				<hr class="mainlanding">
+				</h2>
+				
+				<article class="passintro">
+				<p>Are you an Internationally Educated Nurse (IEN) accepted for immigration to Canada? Please visit our 
+					<span>Pre-Arrival Supports and Services (PASS)</span> program.</p>
+					<a href="<?php echo $passSite;?>">
+						<img src="<?php echo home_url(); ?>/wp-content/uploads/PASS_Intro.png">
+					</a>
+				</article>
+				<article class="starsintro"><p>Are you an IEN who has arrived in Ontario? Please visit the website for our 
+					<span>Supports, Training, and Accessing Regulated-employment Services (STARS)</span> program.</p>
+					<a  href="<?php echo home_url();?>/welcome">
+						<img src="<?php echo home_url(); ?>/wp-content/uploads/STARS_Intro.png">
+					</a>
+				</article>
+			</div>
 		<!-- /MCI or PASS Area -->	
 		</div>
 	</div>
