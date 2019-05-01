@@ -53,7 +53,7 @@
 					</a>
 				</article>
 				<article class="starsintro"><p>Are you an IEN who has arrived in Ontario? Please visit the website for our 
-					<span>Supports, Training, and Accessing Regulated-employment Services (STARS)</span> program.</p>
+					<span>Supports, Training &amp; Access to Regulated-employment Services (STARS)</span> program.</p>
 					<a  href="<?php echo home_url();?>/welcome">
 						<img src="<?php echo home_url(); ?>/wp-content/uploads/STARS_Intro.png">
 					</a>
