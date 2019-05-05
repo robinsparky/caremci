@@ -21,6 +21,8 @@ Theme Name:   CARE MCI
 .mainlanding {
     text-align: justify;
     width: 80%;
+    margin-left: auto;
+    margin-right: auto;
 }
 img.mainlanding {
     margin-left: auto;
