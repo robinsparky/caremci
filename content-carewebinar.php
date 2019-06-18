@@ -8,7 +8,48 @@
 				 //NOTE: Must be a member of the site to view a webinar
 				 $ok = false;
 				 if (is_user_logged_in()) {
-					$currentUser = wp_get_current_user();					
+
+					$currentUser = wp_get_current_user();
+
+					/*** DEBUGGING *********************************************** */
+					// $blog_id = get_current_blog_id();
+					// $user_login = $currentUser->user_login;
+					// error_log(__FILE__ . " User Login: $user_login; Blog id=$blog_id" );
+					// //error_log(wp_debug_backtrace_summary());
+					
+					// if( ! empty( $currentUser->roles) ) {
+					// 	foreach( $currentUser->roles as $r ) {
+					// 		error_log("******************************Has role: $r");
+					// 	}
+					// }
+					// else {
+					// 	error_log("*******************************Has No Roles!");
+					// }
+				
+					// $user_query = new WP_User_Query( array( 'blog_id' => $blog_id, 'role' => 'Administrator' ) );
+					// // User Loop
+					// error_log("Admin Users in blog id 1");
+					// if ( ! empty( $user_query->get_results() ) ) {
+					// 	foreach ( $user_query->get_results() as $user ) {
+					// 		error_log($user->user_login);
+					// 	}
+					// } else {
+					// 	error_log("No admin users found for given blog id: $blog_id.");
+					// }
+					
+					// $wp_roles = wp_roles();
+					// //error_log( print_r($wp_roles, true));
+					// $user_roles = get_option( 'wpsc_user_roles', array() );
+					// error_log("User Roles:");
+					// error_log( print_r($user_roles, true) );
+					// $cap_key = $currentUser->cap_key;
+					// error_log("Current Users cap_key='$cap_key'");
+					// $meta = get_user_meta($currentUser->ID, $currentUser->cap_key, true);
+					// error_log( print_r($meta, true) );
+					//error_log(print_r($currentUser, true));
+
+					/*****************END DEBUGGING ************************************** */
+					
 					$rolesWatch = esc_attr( get_option('care_roles_that_watch') );
 					$rolesWatchArr = explode( ",", $rolesWatch );
 					foreach( $rolesWatchArr as $roleName ) {
