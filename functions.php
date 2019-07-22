@@ -18,7 +18,9 @@ require get_stylesheet_directory() . '/inc/PayPalAPI.php';
 /*
 * MCI styles
 */
-function care_mci_theme_css() {
+function care_mci_theme_css( ) {
+    $loc = __FILE__ . '.' . __FUNCTION__;
+    error_log("$loc");
     wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
     wp_enqueue_style( 'bootstrap-style', get_template_directory_uri() . '/css/bootstrap.css' );
 	wp_enqueue_style( 'theme-menu', get_template_directory_uri() . '/css/theme-menu.css' );
@@ -28,7 +30,10 @@ function care_mci_theme_css() {
 	//wp_dequeue_style( 'appointment-default',get_template_directory_uri() .'/css/default.css');
 
 	//javascript
-	wp_enqueue_script('care-common-js', get_stylesheet_directory_uri()."/js/care-message-window.js");
+    wp_enqueue_script('care-common-js', get_stylesheet_directory_uri()."/js/care-message-window.js");
+    if( is_page( 'join-us') ) {
+        wp_enqueue_script('care-application-form', get_stylesheet_directory_uri()."/js/care-application-form.js");
+    }
 }
 add_action( 'wp_enqueue_scripts', 'care_mci_theme_css', 999 );
 
