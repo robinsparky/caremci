@@ -57,10 +57,6 @@ class ManagementReports
                         , get_stylesheet_directory_uri() . '/js/care-pass-mgmtreports.js'
                         , array('jquery') );
 
-        wp_localize_script( 'care-pass-mgmt', 'care_pass_mgmt', $this->get_data() );
-
-        wp_enqueue_script( 'care-pass-mgmt' );
-
     }
 
     public function registerHandlers() {
@@ -89,6 +85,9 @@ class ManagementReports
      */
     public function renderReportControls() {
         
+        wp_localize_script( 'care-pass-mgmt', 'care_pass_mgmt', $this->get_data() );
+        wp_enqueue_script( 'care-pass-mgmt' );
+
         $select_title = __('Select Report', CARE_TEXTDOMAIN );
         $tmpl = '<option value="%s">%s</option>';
 
