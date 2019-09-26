@@ -2,6 +2,8 @@
 define( "CARE_SERVICE", "MCI" );
 define( 'CARE_TEXTDOMAIN', CARE_SERVICE . '_ien_text' );
 
+//require( WEBRITI_THEME_FUNCTIONS_PATH.'/menu/appoinment_nav_walker.php');
+
 //Class autoload
 require get_stylesheet_directory() . '/inc/autoloader.php';
 
@@ -34,6 +36,12 @@ function care_mci_theme_css( ) {
     if( is_page( 'join-us') ) {
         wp_enqueue_script('care-application-form', get_stylesheet_directory_uri()."/js/care-application-form.js");
     }
+    wp_enqueue_script('care-common-js', get_stylesheet_directory_uri()."/js/care-message-window.js");
+    
+    if( is_front_page() ) {
+        wp_enqueue_script('care-landing-page', get_stylesheet_directory_uri()."/js/care-landingpage.js", ['jquery','jquery-ui-draggable','jquery-ui-droppable', 'jquery-ui-sortable']);
+    }
+
 }
 add_action( 'wp_enqueue_scripts', 'care_mci_theme_css', 999 );
 
@@ -63,6 +71,31 @@ function care_template_include( $templatepath ) {
     return $templatepath;
 }
 add_action( 'after_setup_theme', 'care_mci_setup' );
+
+// Create Landing Page Nav Menu location for About Us
+register_nav_menus( array(
+    'landing' => __('Landing Page',CARE_TEXTDOMAIN))
+);    
+    
+
+//Create Landing Page Nav Menu for About Us
+function createAboutUsMenu () {
+    $menu_name = __('About Us',CARE_TEXTDOMAIN);
+    $menu_exists = wp_get_nav_menu_object( $menu_name );
+
+    if( !$menu_exists) {
+        $menu_id = wp_create_nav_menu($menu_name);
+
+        // Set up default menu items
+        wp_update_nav_menu_item($menu_id, 0, array(
+            'menu-item-title' =>  __('About Care',CARE_TEXTDOMAIN),
+            //     'menu-item-classes' => 'home',
+            'menu-item-url' => home_url( '/about-care-centre/' ), 
+            'menu-item-status' => 'publish'));
+    }
+}
+// setup navigation automatically
+add_action('load-nav-menus.php', 'createAboutUsMenu');
 
 /* 
    ===========================================

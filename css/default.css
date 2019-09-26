@@ -196,8 +196,6 @@ table.picker__table {
 	width: 100%;
 }
 
-
-
 /*
   Webinar CSS
 */
@@ -222,26 +220,23 @@ table.picker__table {
 }
 
 
-
-
-
-
 /* CODE Brought From Custom CSS of the Theme Customizer */
 .footer-section { 
 	font-size:11px;
 	height: 40px;
 } 
 .footer-widget-title { font-size: 2em; } 
-.footer-widget-section .textwidget { line-height: 26px; font-size: 1.6 em; } .footer-widget-column { line-height: 20px; font-size: 1em; width: 100%; } .footer-widget-section .textwidget { line-height: 20px; } .footer-widget-column { line-height: 20px; }
+.footer-widget-section .textwidget { line-height: 26px; font-size: 1.6 em; } 
+.footer-widget-column { line-height: 20px; font-size: 1em; width: 100%; } 
+.footer-widget-section .textwidget { line-height: 20px; } 
+.footer-widget-column { line-height: 20px; }
 
 
-
-
-/* CODE ADDED BY VINCE CICCHINE */
-
-
+/* 
+	CODE ADDED BY VINCE CICCHINE 
+*/
 h2, .h2 {
-	color: #e31837 !important;
+	color: #00a4e4 !important;
 	margin-bottom: 8px !important;
 }
 

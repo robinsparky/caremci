@@ -15,7 +15,7 @@
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?> >
-<div class="graybox"></div>
+<!-- <div class="graybox"></div> -->
 
 <?php if ( get_header_image() != '') {?>
 <div class="header-img">
@@ -30,7 +30,7 @@
 </div>
 <?php } ?>
 <!-- Blog Section with Sidebar -->
-<div class="page-builder">
+<div class="page-builder landingpagebuilder">
 	<div class="container">
 		<div class="row">
 		 <!-- MCI or PASS Area -->
@@ -41,10 +41,28 @@
 			<!-- New Layout -->
 
 				<img class="mainlanding" src="<?php echo home_url(); ?>/wp-content/uploads/CARE_logo_PNG.png">
-				<h2>CARE Centre can help you achieve nursing registration and get started on your Canadian nursing career.
+				<h3 id="intro" class="mainlanding intro">CARE Centre can help you achieve nursing registration and get started on your Canadian nursing career.
+				</h3>
+				<div class="centerlandingmenu">
+					<?php
+						wp_nav_menu( array(  
+								'theme_location' => 'landing',
+								'container'  => '',
+								'menu_class' => 'nav navbar-nav navbar-right star-nav',
+								'fallback_cb' => false, //'webriti_fallback_page_menu',
+								'container_id' => 'landing-about-us',
+								// 'before' => 'Before',
+								// 'after' => 'After',
+								// 'link_after' => '&amp;',
+								// 'link_before' => '&amp;'
+								// 'items_wrap'  => $social,
+								'walker' => new webriti_nav_walker()
+								) );
+					?>
+				</div>
+				<!-- <button id="about-us">About Us</button> -->
 				<hr class="mainlanding">
-				</h2>
-				
+
 				<article class="passintro">
 				<p>Are you an Internationally Educated Nurse (IEN) accepted for immigration to Canada? Please visit our 
 					<span>Pre-Arrival Supports and Services (PASS)</span> program.</p>
@@ -55,11 +73,20 @@
 				<article class="starsintro"><p>Are you an IEN who has arrived in Ontario? Please visit the website for our 
 					<span>Supports, Training &amp; Access to Regulated-employment Services (STARS)</span> program.</p>
 					<a  href="<?php echo home_url();?>/welcome">
-						<img src="<?php echo home_url(); ?>/wp-content/uploads/STARS_Intro.png">
+					<!-- dev: /wp-content/uploads/STARS-HOME-PAGE.gif 
+						stage: /wp-content/uploads/2019/08/STARS-HOME-PAGE.gif
+						live: /wp-content/uploads/2019/09/STARS-HOME-PAGE.gif
+					-->
+						<img src="<?php echo home_url(); ?>/wp-content/uploads/STARS-HOME-PAGE.gif">
 					</a>
 				</article>
 			</div>
 		<!-- /MCI or PASS Area -->	
 		</div>
 	</div>
+</div>
+<div class="iframe-container">
+	<iframe id="iframepage" src="" class="mainlanding care-overlay">
+		<p>Your browser does not support iframes.</p>
+	</iframe>
 </div>

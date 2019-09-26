@@ -19,15 +19,28 @@ Theme Name:   CARE MCI
     height: 3em;
 }
 .mainlanding {
-    text-align: justify;
-    width: 80%;
+	clear: left;
+    /*text-align: justify;*/
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
+}
+
+.landingpagebuilder {
+    padding-top: 0px !important;
+}
+
+#intro {
+    color: rgb(114, 114, 114) !important;
+    text-align: center;
+    margin-top: 5px !important;
+    margin-bottom: 8px !important;
 }
 img.mainlanding {
     margin-left: auto;
     margin-right: auto;
     display: block;
+    width: 40%;
 }
 
 .mainlanding h2 {
@@ -55,7 +68,7 @@ hr.mainlanding {
     text-align: justify;
 }
 .starsintro > p > span {
-    color: rgb(153, 204, 0);
+    color: rgb(0, 172, 161);
 }
 
 .passintro {
@@ -71,4 +84,111 @@ hr.mainlanding {
 }
 .passintro > p  > span {
     color: rgb(0, 164, 228);
+}
+
+/* 
+   Landing Page Menu 
+*/
+
+.centerlandingmenu {
+	margin: 0 auto;
+	display: table;
+}
+
+ul.star-nav {
+	font-family: inherit;
+	text-align: center;
+	background: rgba(174, 176, 178, 0.8);
+	color: white;
+	margin: 0 auto 5px auto;
+	padding: 0 0 0 0;
+}
+
+.star-nav li {
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+.star-nav li > a {
+	color: white;
+    background: rgba(174, 176, 178, 0.8);
+    font-size: larger;
+}
+/*
+.star-nav > li > a:hover {
+	background-color: rgb(122,193,66);
+	color: black;
+}
+
+.star-nav > li > a:visited {
+	background-color: rgb(175,176,178);
+	color: white;
+}
+*/
+
+/*
+ Landing Page iframe
+*/
+.care-overlay {
+	display: none;
+	position: absolute;
+	top: 35%;
+	left: 25%;
+	width: 50%;
+	height: 90%;
+    background: rgba(255, 255, 255, 0.8);
+    object-fit: contain;
+}
+
+.iframe-container {
+	resize: vertical;
+	overflow: auto;
+	height: 100%;
+}
+
+.landingcloser {
+    display: block;
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    cursor: pointer;
+}
+
+@media only screen and (min-width: 250px) and (max-width: 768px) and (orientation: portrait) { 
+	.care-overlay {
+        top: 35%;
+        max-width: 300px;
+        min-width: 250px;
+		min-height: 500px;
+		height: 75%;
+		left: 10%;
+    }
+    #intro {
+        font-size: smaller !important;
+    }
+}
+
+@media only screen and (min-width: 250px) and (max-width: 768px) and (orientation: Landscape) { 
+	.care-overlay {
+        top: 20%;
+        max-width: 400px;
+        min-width: 250px;
+		min-height: 500px;
+		height: 80%;
+		left: 10%;
+	}
+    #intro {
+        font-size: smaller !important;
+    }
+}
+
+
+/**
+  Social media widget
+*/
+ul.widget-social > li {
+    margin: 0 auto;
+    display: table;
+}
+ul.widget-social img {
+    width: 50px;
 }
