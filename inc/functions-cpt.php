@@ -20,7 +20,7 @@ ManagementReports::register();
  * Customize Event Query using Post Meta
  * 
  * @author Bill Erickson
- * @link http://www.billerickson.net/customize-the-wordpress-query/
+ * @link https://www.billerickson.net/customize-the-wordpress-query/
  * @param object $query data
  *
  */

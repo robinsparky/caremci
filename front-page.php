@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html <?php language_attributes(); ?> >
 <head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-157271171-1"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'UA-157271171-1');
+	</script>
+
 	<meta charset="<?php bloginfo('charset'); ?>">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://use.typekit.net/otd8wni.css">
+
 	<?php 
 	$appointment_options=theme_setup_data(); 
 	$header_setting = wp_parse_args(  get_option( 'appointment_options', array() ), $appointment_options);
@@ -73,11 +84,12 @@
 				<article class="starsintro"><p>Are you an IEN who has arrived in Ontario? Please visit the website for our 
 					<span>Supports, Training &amp; Access to Regulated-employment Services (STARS)</span> program.</p>
 					<a  href="<?php echo home_url();?>/welcome">
-					<!-- dev: /wp-content/uploads/STARS-HOME-PAGE.gif 
+					<!-- dev: /wp-content/uploads/STARS-HOME-PAGE-2.gif
 						stage: /wp-content/uploads/2019/08/STARS-HOME-PAGE.gif
 						live: /wp-content/uploads/2019/09/STARS-HOME-PAGE.gif
+						live: /wp-content/uploads/2020/05/STARS-HOME-PAGE-2.gif
 					-->
-						<img src="<?php echo home_url(); ?>/wp-content/uploads/STARS-HOME-PAGE.gif">
+						<img src="<?php echo home_url(); ?>/wp-content/uploads/STARS-HOME-PAGE-2.gif">
 					</a>
 				</article>
 			</div>
