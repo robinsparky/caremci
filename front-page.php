@@ -51,9 +51,9 @@
 			<div class="<?php //appointment_post_layout_class(); ?> mainlanding" >
 			<!-- New Layout -->
 
-				<img class="mainlanding" src="<?php echo home_url(); ?>/wp-content/uploads/CARE_logo_PNG.png">
-				<h3 id="intro" class="mainlanding intro">CARE Centre can help you achieve nursing registration and get started on your Canadian nursing career.
-				</h3>
+				<img class="mainlanding" src="<?php echo home_url(); ?>/wp-content/uploads/CARE_Anniversary_Image.png">
+				<!-- <h3 id="intro" class="mainlanding intro">CARE Centre can help you achieve nursing registration and get started on your Canadian nursing career.
+				</h3> -->
 				<div class="centerlandingmenu">
 					<?php
 						wp_nav_menu( array(  
